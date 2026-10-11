@@ -1,0 +1,3118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SIBAO CBT APP — Admin Portal</title>
+<style>
+:root {
+  --primary: #0E5A38;
+  --primary-hover: #0A4A2E;
+  --primary-light: #E8F5E9;
+  --gold: #C6A100;
+  --gold-light: #FBF4D9;
+  --bg: #F5F7F6;
+  --surface: #FFFFFF;
+  --text: #1A1A1A;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --success: #0E5A38;
+  --success-light: #E8F5E9;
+  --warning: #C6A100;
+  --warning-light: #FBF4D9;
+  --danger: #B91C1C;
+  --danger-light: #FEE2E2;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.10);
+  --radius-sm: 6px; --radius: 10px; --radius-md: 12px; --radius-lg: 18px; --radius-full: 9999px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-base: 0.875rem;
+  --text-md: 1rem; --text-lg: 1.125rem; --text-xl: 1.25rem;
+  --text-2xl: 1.5rem; --text-3xl: 1.875rem;
+  --transition-fast: 150ms ease; --transition: 200ms ease; --transition-slow: 300ms ease;
+  --sidebar-width: 260px; --header-height: 64px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-sans); font-size: var(--text-base); line-height: 1.6; color: var(--text); background: var(--bg); min-height: 100vh; }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+h1,h2,h3,h4,h5,h6 { font-weight: 700; line-height: 1.3; color: var(--text); letter-spacing: -0.01em; }
+p { color: var(--text-muted); }
+.text-muted { color: var(--text-muted); }
+.text-sm { font-size: var(--text-sm); }
+.text-xs { font-size: var(--text-xs); }
+.text-bold { font-weight: 600; }
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1 { gap: var(--space-1); } .gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); } .gap-4 { gap: var(--space-4); }
+.gap-5 { gap: var(--space-5); } .gap-6 { gap: var(--space-6); }
+.grid { display: grid; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.mt-1 { margin-top: var(--space-1); } .mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); } .mt-4 { margin-top: var(--space-4); }
+.mt-5 { margin-top: var(--space-5); } .mt-6 { margin-top: var(--space-6); }
+.mb-1 { margin-bottom: var(--space-1); } .mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); } .mb-4 { margin-bottom: var(--space-4); }
+.mb-5 { margin-bottom: var(--space-5); } .mb-6 { margin-bottom: var(--space-6); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: 10px 18px; font-size: var(--text-sm); font-weight: 600;
+  border-radius: var(--radius); transition: all var(--transition-fast);
+  white-space: nowrap; line-height: 1.4; border: 1px solid transparent;
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); box-shadow: var(--shadow-md); }
+.btn-secondary { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+.btn-secondary:hover:not(:disabled) { background: var(--bg); border-color: var(--text-muted); }
+.btn-success { background: var(--primary); color: white; }
+.btn-success:hover:not(:disabled) { background: var(--primary-hover); box-shadow: var(--shadow-md); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover:not(:disabled) { background: #991B1B; box-shadow: var(--shadow-md); }
+.btn-ghost { background: transparent; color: var(--text-muted); }
+.btn-ghost:hover:not(:disabled) { background: var(--bg); }
+.btn-sm { padding: 6px 12px; font-size: var(--text-xs); }
+.btn-sm svg { width: 14px; height: 14px; }
+.btn-lg { padding: 14px 28px; font-size: var(--text-md); }
+.action-buttons { display: inline-flex; gap: 4px; align-items: center; }
+.btn-ghost-icon {
+  padding: 6px; border-radius: 8px; color: var(--text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  transition: all var(--transition-fast); border: none; background: none; cursor: pointer;
+}
+.btn-ghost-icon svg { width: 14px; height: 14px; display: block; }
+.btn-ghost-icon:hover { background: var(--bg); color: var(--text); }
+.btn-ghost-icon.danger { color: var(--danger); }
+.btn-ghost-icon.danger:hover { background: var(--danger-light); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.card-body { padding: var(--space-5); }
+.card-title { font-size: var(--text-md); font-weight: 700; color: var(--text); }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; font-size: var(--text-xs); font-weight: 600;
+  border-radius: var(--radius-full); white-space: nowrap;
+}
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-success { background: var(--success-light); color: var(--primary); }
+.badge-warning { background: var(--warning-light); color: #8A6D00; }
+.badge-danger { background: var(--danger-light); color: #991B1B; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-3); }
+.form-label { font-size: var(--text-sm); font-weight: 600; color: var(--text-muted); }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 14px; font-size: var(--text-base);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light);
+}
+.form-textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 40px;
+}
+.filter-bar {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5); box-shadow: var(--shadow-sm);
+}
+.filter-bar .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.filter-bar .form-select, .filter-bar .form-input {
+  padding: 7px 12px; font-size: var(--text-xs); height: 34px;
+  border-radius: var(--radius); width: auto;
+}
+.filter-bar .form-select { padding-right: 32px; background-position: right 10px center; background-size: 14px; }
+.filter-bar .form-input { min-width: 180px; }
+.filter-bar .btn { padding: 7px 14px; font-size: var(--text-xs); height: 34px; }
+.progress { width: 100%; height: 8px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary); border-radius: var(--radius-full); transition: width var(--transition-slow); }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-5);
+  display: flex; flex-direction: column; gap: var(--space-3);
+  transition: all var(--transition);
+}
+.stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.stat-icon {
+  width: 44px; height: 44px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--primary-light); color: var(--primary);
+}
+.stat-icon svg { width: 22px; height: 22px; }
+.stat-icon.success { background: var(--primary-light); color: var(--primary); }
+.stat-icon.warning { background: var(--warning-light); color: #8A6D00; }
+.stat-icon.secondary { background: var(--primary-light); color: var(--primary); }
+.stat-value { font-size: var(--text-3xl); font-weight: 800; color: var(--text); line-height: 1.1; letter-spacing: -0.02em; }
+.stat-label { font-size: var(--text-sm); color: var(--text-muted); font-weight: 500; }
+.sidebar {
+  width: var(--sidebar-width); background: var(--surface);
+  border-right: 1px solid var(--border); display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+  transition: transform var(--transition-slow);
+}
+.sidebar-header {
+  padding: var(--space-4) var(--space-5);
+  background: var(--primary); border-bottom: 2px solid var(--gold);
+  display: flex; align-items: center; gap: var(--space-3); overflow: hidden;
+}
+.sidebar-logo {
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.sidebar-logo img {
+  width: 100%; height: 100%; object-fit: contain;
+  mix-blend-mode: screen; filter: brightness(1.05) contrast(1.05);
+}
+.sidebar-brand { font-weight: 700; font-size: var(--text-sm); color: white; line-height: 1.2; }
+.sidebar-brand small { display: block; font-size: var(--text-xs); font-weight: 500; color: var(--gold); margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: var(--space-4); overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-nav-item {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: 10px 14px; border-radius: var(--radius);
+  font-size: var(--text-sm); font-weight: 500; color: var(--text-muted);
+  transition: all var(--transition-fast); cursor: pointer;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.sidebar-nav-item:hover { background: var(--bg); color: var(--text); }
+.sidebar-nav-item.active {
+  background: var(--primary-light); color: var(--primary);
+  font-weight: 600; border-left: 4px solid var(--primary); padding-left: 10px;
+}
+.sidebar-nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.sidebar-section-label {
+  font-size: var(--text-xs); font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em; padding: var(--space-4) 14px var(--space-2);
+}
+.top-header {
+  height: var(--header-height); background: var(--surface);
+  border-bottom: 1px solid var(--border); display: flex;
+  align-items: center; justify-content: space-between;
+  padding: 0 var(--space-6); position: sticky; top: 0; z-index: 40; gap: var(--space-4);
+}
+.header-left { display: flex; align-items: center; gap: var(--space-3); min-width: 0; flex: 1; }
+.header-greeting { font-size: var(--text-md); font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-actions { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; position: relative; }
+.header-icon-btn {
+  width: 40px; height: 40px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); transition: all var(--transition-fast); position: relative;
+}
+.header-icon-btn:hover { background: var(--bg); color: var(--text); }
+.header-icon-btn .notification-dot {
+  position: absolute; top: 8px; right: 8px; width: 8px; height: 8px;
+  background: var(--danger); border-radius: 50%; border: 2px solid var(--surface);
+}
+.notif-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 60px;
+  width: 340px; max-width: calc(100vw - 32px);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+  z-index: 100; opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: all var(--transition-fast);
+}
+.notif-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+.notif-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+}
+.notif-header h4 { font-size: var(--text-sm); margin: 0; }
+.notif-header button { font-size: var(--text-xs); color: var(--primary); font-weight: 600; }
+.notif-list { max-height: 380px; overflow-y: auto; }
+.notif-item {
+  display: flex; gap: 10px; padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--transition-fast);
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--bg); }
+.notif-item.unread { background: var(--primary-light); }
+.notif-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--primary-light); color: var(--primary);
+  flex-shrink: 0;
+}
+.notif-icon.danger { background: var(--danger-light); color: var(--danger); }
+.notif-icon.warning { background: var(--warning-light); color: var(--gold); }
+.notif-icon svg { width: 16px; height: 16px; }
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-size: var(--text-sm); color: var(--text); font-weight: 600; margin-bottom: 2px; }
+.notif-text { font-size: var(--text-xs); color: var(--text-muted); line-height: 1.4; }
+.notif-time { font-size: 10px; color: var(--text-light); margin-top: 4px; }
+.notif-empty { padding: 32px 16px; text-align: center; color: var(--text-muted); font-size: var(--text-sm); }
+.header-profile {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: 4px 12px 4px 4px; border-radius: var(--radius-full);
+  cursor: pointer; transition: background var(--transition-fast); flex-shrink: 0;
+}
+.header-profile:hover { background: var(--bg); }
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--primary);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: var(--text-sm); flex-shrink: 0;
+}
+.header-profile-info { display: none; min-width: 0; line-height: 1.15; }
+@media (min-width: 768px) { .header-profile-info { display: block; } }
+.header-profile-name {
+  font-size: var(--text-sm); font-weight: 600; color: var(--text);
+  line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
+}
+.header-profile-role { font-size: var(--text-xs); color: var(--text-muted); line-height: 1.2; }
+.btn-logout {
+  padding: 7px 14px; font-size: var(--text-xs); font-weight: 600;
+  border-radius: var(--radius); background: var(--danger-light);
+  color: var(--danger); transition: all var(--transition-fast);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-logout:hover { background: #FECACA; }
+.btn-logout svg { width: 14px; height: 14px; }
+.mobile-menu-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: var(--radius);
+  color: var(--text-muted); flex-shrink: 0;
+}
+.mobile-menu-btn:hover { background: var(--bg); }
+@media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
+.app-layout { display: flex; min-height: 100vh; }
+.main-content {
+  flex: 1; margin-left: var(--sidebar-width);
+  transition: margin var(--transition-slow); min-width: 0;
+  display: flex; flex-direction: column;
+}
+@media (max-width: 1023px) {
+  .main-content { margin-left: 0; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+}
+.page-content { padding: var(--space-6); max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+@media (max-width: 640px) { .page-content { padding: var(--space-4); } }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--space-4); gap: var(--space-4); flex-wrap: wrap;
+}
+.section-header h2 { font-size: var(--text-xl); font-weight: 700; }
+.actions-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+.table-wrap {
+  width: 100%; overflow-x: auto; border: 1px solid var(--border);
+  border-radius: var(--radius-md); background: var(--surface);
+}
+table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+thead { background: var(--bg); border-bottom: 1px solid var(--border); }
+th {
+  padding: 12px 16px; text-align: left; font-weight: 600;
+  color: var(--text-muted); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+}
+td {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text); vertical-align: middle;
+}
+tbody tr:hover { background: var(--bg); }
+tbody tr:last-child td { border-bottom: none; }
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(26, 26, 26, 0.5);
+  backdrop-filter: blur(4px); display: flex; align-items: center;
+  justify-content: center; z-index: 1000; padding: var(--space-4);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--transition), visibility var(--transition);
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); width: 100%; max-width: 560px;
+  max-height: 90vh; overflow-y: auto; transform: scale(0.95);
+  transition: transform var(--transition);
+}
+.modal-lg { max-width: 960px; }
+.modal-overlay.open .modal { transform: scale(1); }
+.modal-header {
+  padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--surface); z-index: 5;
+}
+.modal-title { font-size: var(--text-lg); font-weight: 700; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); transition: all var(--transition-fast);
+}
+.modal-close:hover { background: var(--bg); color: var(--text); }
+.modal-close svg { width: 20px; height: 20px; }
+.modal-body { padding: var(--space-6); }
+.modal-footer {
+  padding: var(--space-4) var(--space-6); border-top: 1px solid var(--border);
+  display: flex; gap: var(--space-3); justify-content: flex-end;
+  flex-wrap: wrap; position: sticky; bottom: 0; background: var(--surface);
+}
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1A1A1A; color: #fff; padding: 12px 20px;
+  border-radius: var(--radius); font-size: var(--text-sm);
+  font-weight: 500; box-shadow: var(--shadow-lg); z-index: 2000;
+  opacity: 0; transform: translateY(20px);
+  transition: all 0.3s ease; max-width: 340px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: var(--danger); }
+.toast.success { background: var(--primary); }
+.loader { display: flex; align-items: center; justify-content: center; padding: 60px; color: var(--text-muted); gap: 10px; }
+.spinner { width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.fade-in { animation: fadeIn var(--transition-slow) ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.dash-banner {
+  background: linear-gradient(90deg, #0E5A38 0%, #1A7A4C 100%);
+  border-radius: var(--radius-md);
+  padding: var(--space-8) var(--space-6) var(--space-8) var(--space-8);
+  color: white; margin-bottom: var(--space-5);
+  min-height: 160px; display: flex; flex-direction: column;
+  justify-content: center; box-shadow: var(--shadow-md);
+}
+.dash-banner h2 { color: white; font-size: var(--text-2xl); margin-bottom: var(--space-2); }
+.dash-banner p { color: rgba(255, 255, 255, 0.92); font-size: var(--text-md); margin: 0; }
+.perf-row { margin-bottom: 14px; }
+.perf-row .top { display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px; }
+.perf-row .top .name { font-weight: 600; }
+.perf-row .top .pct { color: var(--text-muted); }
+.perf-row .bar { width: 100%; height: 8px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; }
+.perf-row .bar .fill { height: 100%; border-radius: var(--radius-full); }
+.option-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 10px; }
+.opt-label { width: 28px; height: 38px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+.opt-input { flex: 1; }
+.opt-img-wrap { display: flex; align-items: flex-start; gap: 6px; flex-shrink: 0; }
+.opt-img-btn {
+  width: 60px; height: 60px; border: 1.5px dashed var(--border);
+  border-radius: var(--radius); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; color: var(--text-muted);
+  cursor: pointer; flex-shrink: 0; font-size: 10px; font-weight: 600;
+  line-height: 1.1; gap: 2px; transition: all var(--transition-fast);
+  position: relative; overflow: hidden; background: var(--bg);
+}
+.opt-img-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.opt-img-btn svg { width: 18px; height: 18px; }
+.opt-img-btn input { display: none; }
+.opt-img-btn .preview-inside { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: calc(var(--radius) - 2px); }
+.opt-img-btn.has-image { border-style: solid; border-color: var(--primary); }
+.expl-img-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border: 1.5px dashed var(--border);
+  border-radius: var(--radius); color: var(--text-muted);
+  cursor: pointer; font-size: var(--text-sm); font-weight: 600;
+  transition: all var(--transition-fast); background: var(--bg);
+}
+.expl-img-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.expl-img-btn svg { width: 16px; height: 16px; }
+.expl-img-btn input { display: none; }
+.img-prev { display: block; max-width: 100%; max-height: 160px; width: auto; height: auto; object-fit: contain; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 8px; background: var(--bg); }
+.expl-img-preview { max-width: 100%; max-height: 160px; width: auto; height: auto; object-fit: contain; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 8px; display: block; background: var(--bg); }
+.q-thumb { width: 40px; height: 40px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg); }
+.drag { border: 2px dashed var(--border); border-radius: var(--radius); padding: var(--space-8); text-align: center; cursor: pointer; transition: all var(--transition); background: var(--bg); }
+.drag:hover { border-color: var(--primary); background: var(--primary-light); }
+.drag.dragover { border-color: var(--primary); background: var(--primary-light); }
+.drag p { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.preview-table { width: 100%; border-collapse: collapse; font-size: var(--text-xs); }
+.preview-table th, .preview-table td { padding: 6px 8px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+.preview-table th { background: var(--bg); font-weight: 600; color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+.preview-table img { max-width: 50px; max-height: 50px; border-radius: 4px; }
+.mock-picker { max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.mock-picker-row { display: flex; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.mock-picker-row:last-child { border-bottom: none; }
+.mock-picker-row input[type="checkbox"] { margin-top: 4px; flex-shrink: 0; width: 16px; height: 16px; }
+.mock-picker-row .info { flex: 1; min-width: 0; }
+.mock-picker-row .q-text { font-size: var(--text-sm); color: var(--text); margin-bottom: 2px; }
+.mock-picker-row .q-meta { font-size: var(--text-xs); color: var(--text-muted); }
+.selected-q-row { display: flex; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); align-items: center; font-size: var(--text-sm); }
+.selected-q-row:last-child { border-bottom: none; }
+.selected-q-row .q-num { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--text-xs); flex-shrink: 0; }
+.selected-q-row .q-info { flex: 1; min-width: 0; }
+.selected-q-row .q-text { font-size: var(--text-sm); color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.selected-q-row .q-meta { font-size: var(--text-xs); color: var(--text-muted); }
+.empty-note { padding: 24px; text-align: center; color: var(--text-muted); font-size: var(--text-sm); }
+.confirm-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.confirm-icon.danger { background: var(--danger-light); color: var(--danger); }
+.confirm-icon.warning { background: var(--warning-light); color: var(--gold); }
+.confirm-icon svg { width: 28px; height: 28px; }
+.confirm-title { text-align: center; font-size: var(--text-lg); font-weight: 700; margin-bottom: 8px; }
+.confirm-message { text-align: center; color: var(--text-muted); font-size: var(--text-sm); line-height: 1.6; }
+.confirm-message strong { color: var(--text); }
+.auth-page { position: fixed; inset: 0; z-index: 9998; display: flex; background: #ffffff; opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease; }
+.auth-page.open { opacity: 1; visibility: visible; }
+.auth-left { flex: 1; background: linear-gradient(160deg, #0E5A38 0%, #0A4A2E 100%); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 40px 32px; }
+.auth-left::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='none'%3E%3Cpath d='M0 450 Q 360 300 720 450 T 1440 450 L 1440 900 L 0 900 Z' fill='rgba(255,255,255,0.04)'/%3E%3Cpath d='M0 550 Q 360 400 720 550 T 1440 550 L 1440 900 L 0 900 Z' fill='rgba(255,255,255,0.03)'/%3E%3Cpath d='M0 650 Q 360 500 720 650 T 1440 650 L 1440 900 L 0 900 Z' fill='rgba(255,255,255,0.02)'/%3E%3C/svg%3E");
+  background-size: cover; background-position: center; pointer-events: none;
+}
+.auth-corner-tl { position: absolute; top: 22px; left: 28px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); letter-spacing: 0.08em; text-transform: uppercase; z-index: 3; }
+.auth-left-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 480px; }
+.auth-logo-big { width: min(260px, 60%); height: auto; margin-bottom: 28px; filter: drop-shadow(0 8px 32px rgba(0,0,0,0.4)); transition: transform 0.3s ease; }
+.auth-logo-big:hover { transform: scale(1.03); }
+.auth-left-headline { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 800; color: #ffffff; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+.auth-left-sub { font-size: clamp(0.85rem, 1.4vw, 1rem); color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 400px; }
+.auth-left-footer { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; z-index: 3; }
+.auth-right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 32px; position: relative; background: #ffffff; overflow-y: auto; }
+.auth-right-title { position: absolute; top: 28px; left: 36px; font-size: 17px; font-weight: 700; color: var(--primary); letter-spacing: 0.02em; text-transform: uppercase; }
+.auth-card {
+  width: 100%; max-width: 420px; background: #ffffff; border-radius: 22px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  padding: 44px 36px 36px; display: flex; flex-direction: column; align-items: center;
+  border: 1px solid rgba(0,0,0,0.04); margin-bottom: 20px;
+}
+.auth-card-logo { width: 72px; height: 72px; object-fit: contain; margin-bottom: 10px; border-radius: 50%; }
+.auth-card-title { font-size: 20px; font-weight: 800; color: var(--primary); letter-spacing: 0.04em; margin-bottom: 8px; text-align: center; text-transform: uppercase; }
+.auth-card-preface { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 28px; line-height: 1.5; }
+.auth-field { width: 100%; margin-bottom: 16px; position: relative; }
+.auth-field input {
+  width: 100%; padding: 15px 18px; font-size: 15px;
+  border: 2px solid #D1D5DB; border-radius: 12px;
+  background: #ffffff; color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none; font-family: inherit;
+}
+.auth-field input::placeholder { color: transparent; }
+.auth-field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+.auth-field label {
+  position: absolute; left: 16px; top: 50%;
+  transform: translateY(-50%); font-size: 15px; color: var(--text-muted);
+  pointer-events: none; transition: all 0.2s ease;
+  background: #ffffff; padding: 0 4px;
+}
+.auth-field input:focus + label,
+.auth-field input:not(:placeholder-shown) + label {
+  top: 0; font-size: 11px; color: var(--primary); font-weight: 600;
+}
+.auth-field.password-field input { padding-right: 48px; }
+.password-toggle {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%); width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); cursor: pointer; border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+  background: none; border: none; padding: 0; z-index: 2;
+}
+.password-toggle:hover { background: var(--bg); color: var(--primary); }
+.password-toggle svg { width: 18px; height: 18px; }
+.auth-forgot { width: 100%; text-align: right; margin-top: -8px; margin-bottom: 12px; }
+.auth-forgot a { font-size: 13px; color: var(--primary); font-weight: 600; text-decoration: none; transition: color 0.2s ease; cursor: pointer; }
+.auth-forgot a:hover { color: var(--primary-hover); text-decoration: underline; }
+.auth-error { width: 100%; color: var(--danger); font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 12px; min-height: 22px; display: flex; align-items: center; justify-content: center; }
+.auth-error:empty { display: none; }
+.auth-btn {
+  width: 100%; padding: 15px; background: var(--primary);
+  color: #ffffff; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s ease; letter-spacing: 0.03em;
+  font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.auth-btn:hover:not(:disabled) { background: var(--primary-hover); box-shadow: 0 6px 20px rgba(14, 90, 56, 0.3); transform: translateY(-1px); }
+.auth-btn:active:not(:disabled) { transform: translateY(0); }
+.auth-btn:disabled { opacity: 0.8; cursor: not-allowed; }
+.auth-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #ffffff; border-radius: 50%; animation: authSpin 0.6s linear infinite; }
+@keyframes authSpin { to { transform: rotate(360deg); } }
+.auth-help { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 14px; line-height: 1.5; }
+.auth-help strong { color: var(--primary); }
+.auth-footer { text-align: center; font-size: 11px; color: var(--text-muted); line-height: 1.6; max-width: 400px; padding: 0 8px; }
+.auth-footer .footer-line { display: block; }
+.auth-footer .footer-brand { color: var(--primary); font-weight: 700; }
+@media (max-width: 900px) {
+  .auth-page { flex-direction: column; }
+  .auth-left { flex: 0 0 auto; min-height: 260px; padding: 28px 20px; }
+  .auth-logo-big { width: min(140px, 38%); margin-bottom: 12px; }
+  .auth-left-headline { font-size: 1.2rem; }
+  .auth-left-sub { font-size: 0.82rem; }
+  .auth-left-footer { position: static; margin-top: 16px; }
+  .auth-corner-tl { top: 14px; left: 16px; font-size: 10px; }
+  .auth-right { flex: 1; padding: 24px 20px; justify-content: flex-start; }
+  .auth-right-title { position: static; margin-bottom: 16px; font-size: 15px; align-self: flex-start; }
+  .auth-card { padding: 28px 20px 24px; max-width: 100%; }
+}
+
+/* ===== NEW: multi-subject picker ===== */
+.subject-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 54px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); }
+.subject-chips.empty { justify-content: flex-start; align-items: center; }
+.subject-chips .empty-text { color: var(--text-muted); font-size: var(--text-sm); }
+.subject-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px 6px 12px; background: var(--primary);
+  color: white; border-radius: var(--radius-full);
+  font-size: var(--text-xs); font-weight: 600;
+}
+.subject-chip .chip-x {
+  background: rgba(255,255,255,0.25); width: 16px; height: 16px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; cursor: pointer; transition: background var(--transition-fast);
+  border: none; color: white; padding: 0;
+}
+.subject-chip .chip-x:hover { background: rgba(255,255,255,0.45); }
+.subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.subject-tile {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius); cursor: pointer;
+  transition: all var(--transition-fast); background: var(--surface); text-align: left;
+}
+.subject-tile:hover:not(.disabled) { border-color: var(--primary); background: var(--primary-light); }
+.subject-tile.selected { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 0 2px var(--primary-light); }
+.subject-tile.disabled { opacity: 0.5; cursor: not-allowed; }
+.subject-tile .st-name { font-size: var(--text-sm); font-weight: 600; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
+.subject-tile .st-count { font-size: 10px; color: var(--text-muted); }
+.subject-tile .st-check { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; flex-shrink: 0; }
+.subject-tile.selected .st-check { border-color: var(--primary); background: var(--primary); color: white; }
+.subject-tile.selected .st-check::before { content: "?"; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="auth-page open" id="loginPage">
+  <div class="auth-left">
+    <div class="auth-corner-tl">FOUNDED 1999 | SIBAO CBT ADMIN</div>
+    <div class="auth-left-content">
+      <img class="auth-logo-big" src="https://res.cloudinary.com/t3tg9lfb/image/upload/v1783515403/1000374024_11zon-256x256_ivfvnp.png" alt="SIBAO Logo">
+      <div class="auth-left-headline">Welcome to SIBAO CBT Admin</div>
+      <div class="auth-left-sub">Faith, Knowledge &amp; Service — Manage your students, questions and quizzes.</div>
+    </div>
+    <div class="auth-left-footer">@2026</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-right-title">Login Page</div>
+    <div class="auth-card">
+      <img class="auth-card-logo" src="https://res.cloudinary.com/t3tg9lfb/image/upload/v1783515403/1000374024_11zon-256x256_ivfvnp.png" alt="SIBAO Logo">
+      <div class="auth-card-title">SIBAO JAMB ADMIN</div>
+      <div class="auth-card-preface">Enter your admin credentials to continue</div>
+      <form id="loginForm" style="width:100%;" onsubmit="return handleLogin(event)">
+        <div class="auth-field">
+          <input type="email" id="loginEmail" placeholder=" " autocomplete="email" required>
+          <label for="loginEmail">Email</label>
+        </div>
+        <div class="auth-field password-field">
+          <input type="password" id="loginPassword" placeholder=" " autocomplete="current-password" required>
+          <label for="loginPassword">Password</label>
+          <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Show password">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="auth-forgot"><a onclick="alert('Contact the ICT Unit to reset your password.')">Forgot Password?</a></div>
+        <div class="auth-error" id="loginError"></div>
+        <button type="submit" class="auth-btn" id="loginSubmitBtn">LOGIN</button>
+        <div class="auth-help">Need help? Contact <strong>ICT Unit</strong> — 0803 456 7890</div>
+      </form>
+    </div>
+    <div class="auth-footer">
+      <span class="footer-line">© 2026 Smith International Baptist Academy, Ogbomoso. All Rights Reserved.</span>
+      <span class="footer-line">Powered by <span class="footer-brand">IMPACT ROBOTICS LAB</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp" class="app-layout" style="display:none;">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="https://res.cloudinary.com/t3tg9lfb/image/upload/v1783515403/1000374024_11zon-256x256_ivfvnp.png" alt="SIBAO Logo">
+      </div>
+      <div class="sidebar-brand">SIBAO CBT ADMIN<small>Control Panel</small></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <button class="sidebar-nav-item active" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <div class="sidebar-section-label">Content</div>
+      <button class="sidebar-nav-item" data-nav="students">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Students
+      </button>
+      <button class="sidebar-nav-item" data-nav="subjects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Subjects
+      </button>
+      <button class="sidebar-nav-item" data-nav="questions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Question Bank
+      </button>
+      <div class="sidebar-section-label">Quizzes</div>
+      <button class="sidebar-nav-item" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Published Quizzes
+      </button>
+      <div class="sidebar-section-label">Analytics</div>
+      <button class="sidebar-nav-item" data-nav="results">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Results
+      </button>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" id="mobileMenu" aria-label="Toggle menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="header-greeting" id="headerGreeting">Admin Panel</div>
+      </div>
+      <div class="header-actions">
+        <div style="position:relative;">
+          <button class="header-icon-btn" id="notifBtn" aria-label="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notification-dot" id="notifDot"></span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-header">
+              <h4>Notifications</h4>
+              <button id="notifMarkRead">Mark all read</button>
+            </div>
+            <div class="notif-list" id="notifList"></div>
+          </div>
+        </div>
+        <div class="header-profile">
+          <div class="avatar" id="userAvatar">A</div>
+          <div class="header-profile-info">
+            <div class="header-profile-name" id="userName">Admin</div>
+            <div class="header-profile-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </header>
+    <div class="page-content" id="content">
+      <div class="loader"><div class="spinner"></div> Loading…</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" id="modalDialog">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Modal</h3>
+      <button class="modal-close" id="modalClose" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFoot"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('loginPassword');
+  const icon = document.getElementById('eyeIcon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+  } else {
+    input.type = 'password';
+    icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+  }
+}
+window.togglePassword = togglePassword;
+</script>
+<script src="https://js.puter.com/v2/"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD9hpxtsU-e2b5VjvdhDWztpfPcAaJ3KzU",
+  authDomain: "sibao-jamb-app.firebaseapp.com",
+  databaseURL: "https://sibao-jamb-app-default-rtdb.firebaseio.com",
+  projectId: "sibao-jamb-app",
+  storageBucket: "sibao-jamb-app.firebasestorage.app",
+  messagingSenderId: "691306452659",
+  appId: "1:691306452659:web:b41d29b1771668c49042c6"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getDatabase(fbApp);
+
+window.__fb = { auth, db, ref, push, set, update, remove, onValue, signOut };
+window.__cloudinary = { cloud: 't3tg9lfb', preset: 'ml_default' };
+
+window.handleLogin = async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn = document.getElementById('loginSubmitBtn');
+  errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = 'Please enter email and password.'; return false; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="auth-spinner"></span> LOGGING IN...';
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    errEl.textContent = prettyAuthError(err.code);
+    btn.disabled = false;
+    btn.textContent = 'LOGIN';
+  }
+  return false;
+};
+
+function prettyAuthError(code) {
+  const map = {
+    'auth/invalid-email': 'Invalid email address.',
+    'auth/user-not-found': 'No user with that email.',
+    'auth/wrong-password': 'Incorrect password.',
+    'auth/invalid-credential': 'Invalid email or password.',
+    'auth/too-many-requests': 'Too many attempts. Try again later.',
+    'auth/network-request-failed': 'Network error. Check your connection.'
+  };
+  return map[code] || 'Login failed. Check your credentials.';
+}
+
+onAuthStateChanged(auth, user => {
+  const loginPage = document.getElementById('loginPage');
+  const adminApp = document.getElementById('adminApp');
+  if (user) {
+    loginPage.classList.remove('open');
+    adminApp.style.display = 'flex';
+    document.getElementById('userName').textContent = user.email.split('@')[0];
+    document.getElementById('userAvatar').textContent = (user.email[0] || 'A').toUpperCase();
+    document.getElementById('headerGreeting').textContent = 'Welcome, ' + user.email.split('@')[0];
+    window.__currentUser = user;
+    if (window.__bootApp) window.__bootApp();
+  } else {
+    loginPage.classList.add('open');
+    adminApp.style.display = 'none';
+    document.getElementById('loginSubmitBtn').disabled = false;
+    document.getElementById('loginSubmitBtn').textContent = 'LOGIN';
+    window.__currentUser = null;
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  if (confirm('Sign out?')) await signOut(auth);
+});
+</script>
+
+<script>
+async function uploadToCloudinary(file) {
+  const { cloud, preset } = window.__cloudinary;
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', preset);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/auto/upload`, { method: 'POST', body: fd });
+  if (!res.ok) throw new Error('Cloudinary upload failed');
+  const data = await res.json();
+  return data.secure_url;
+}
+window.uploadToCloudinary = uploadToCloudinary;
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = 'toast ' + type, 3000);
+}
+window.toast = toast;
+
+function openModal(title, bodyHtml, buttons = [], large = false) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHtml;
+  document.getElementById('modalDialog').classList.toggle('modal-lg', large);
+  const foot = document.getElementById('modalFoot');
+  foot.innerHTML = '';
+  buttons.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'btn ' + (b.class || 'btn-secondary');
+    btn.textContent = b.label;
+    btn.disabled = !!b.disabled;
+    btn.onclick = b.onClick;
+    foot.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+window.openModal = openModal;
+window.closeModal = closeModal;
+document.getElementById('modalClose').onclick = closeModal;
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function confirmDialog({ title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel', variant = 'danger', onConfirm }) {
+  const iconClass = variant === 'danger' ? 'danger' : 'warning';
+  const body = `
+    <div class="confirm-icon ${iconClass}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <div class="confirm-title">${esc(title)}</div>
+    <div class="confirm-message">${message}</div>
+  `;
+  openModal('', body, [
+    { label: cancelLabel, class: 'btn-secondary', onClick: closeModal },
+    { label: confirmLabel, class: 'btn-danger', onClick: () => { closeModal(); onConfirm(); } }
+  ]);
+}
+window.confirmDialog = confirmDialog;
+
+const DB = { students: [], subjects: [], questions: [], mocks: [], results: [] };
+let currentView = 'dashboard';
+let booted = false;
+const state = {
+  questionFilter: { subject: '', topic: '', difficulty: '', year: '', search: '' },
+  resultFilter: { student: '', subject: '', class: '', search: '' },
+  mockBuilder: { selectedQuestions: [], editId: null, selectedSubjects: [] },
+  notifications: [],
+  notificationsRead: false
+};
+
+function listen(path, key) {
+  const { db, ref, onValue } = window.__fb;
+  onValue(ref(db, path), snap => {
+    const val = snap.val() || {};
+    DB[key] = Object.entries(val).map(([id, data]) => ({ id, ...data }));
+    render();
+  }, err => { console.error('DB read error on ' + path, err); });
+}
+async function dbPush(path, data) {
+  const { db, ref, push, set } = window.__fb;
+  const r = push(ref(db, path));
+  await set(r, { ...data, createdAt: Date.now() });
+  return r.key;
+}
+async function dbUpdate(path, id, data) {
+  const { db, ref, update } = window.__fb;
+  await update(ref(db, `${path}/${id}`), data);
+}
+async function dbRemove(path, id) {
+  const { db, ref, remove } = window.__fb;
+  await remove(ref(db, `${path}/${id}`));
+}
+
+document.querySelectorAll('.sidebar-nav-item[data-nav]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.nav;
+    render();
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+document.getElementById('mobileMenu').onclick = () => {
+  document.getElementById('sidebar').classList.toggle('open');
+};
+
+function adminNav(view) {
+  if (view === 'createMock') {
+    currentView = 'createMock';
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelector('.sidebar-nav-item[data-nav="published"]')?.classList.add('active');
+    render();
+    document.getElementById('sidebar').classList.remove('open');
+    return;
+  }
+  currentView = view;
+  document.querySelectorAll('.sidebar-nav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.nav === view);
+  });
+  render();
+  document.getElementById('sidebar').classList.remove('open');
+}
+window.adminNav = adminNav;
+
+function render() {
+  const c = document.getElementById('content');
+  if (!c) return;
+  if (currentView === 'dashboard') c.innerHTML = viewDashboard();
+  else if (currentView === 'students') c.innerHTML = viewStudents();
+  else if (currentView === 'subjects') c.innerHTML = viewSubjects();
+  else if (currentView === 'questions') c.innerHTML = viewQuestions();
+  else if (currentView === 'published') c.innerHTML = viewMocks();
+  else if (currentView === 'createMock') c.innerHTML = viewCreateMock();
+  else if (currentView === 'results') c.innerHTML = viewResults();
+  else c.innerHTML = viewDashboard();
+}
+window.render = render;
+
+/* DASHBOARD */
+function viewDashboard() {
+  const subjStats = {};
+  DB.questions.forEach(q => {
+    const s = q.subject || 'Other';
+    if (!subjStats[s]) subjStats[s] = { total: 0 };
+    subjStats[s].total++;
+  });
+  const maxQ = Math.max(1, ...Object.values(subjStats).map(v => v.total));
+  const perfList = Object.entries(subjStats).slice(0, 6).map(([name, v]) => ({
+    name, pct: Math.round((v.total / maxQ) * 100), count: v.total
+  }));
+
+  return `
+    <div class="fade-in">
+      <div class="dash-banner">
+        <h2>SIBAO CBT Admin Panel</h2>
+        <p>Manage students, subjects, questions, and quizzes — all in one place.</p>
+      </div>
+      <div class="grid grid-4 gap-4 mb-6">
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="stat-value">${DB.students.length}</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="stat-value">${DB.questions.length}</div>
+          <div class="stat-label">Questions in Bank</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="stat-value">${DB.mocks.length}</div>
+          <div class="stat-label">Quizzes Created</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <div class="stat-value">${DB.subjects.length}</div>
+          <div class="stat-label">Subjects</div>
+        </div>
+      </div>
+
+      <div class="card mb-6">
+        <div class="card-body">
+          <h4 class="card-title mb-4">Recent Questions</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question</th><th>Subject</th><th>Year</th></tr></thead>
+              <tbody>
+                ${DB.questions.length === 0 ? `<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--text-muted)">No questions yet.</td></tr>` :
+                  DB.questions.slice(0, 5).map(q => `
+                    <tr>
+                      <td style="max-width:340px">${esc((q.text||'').slice(0, 100))}${(q.text||'').length > 100 ? '…' : ''}</td>
+                      <td>${esc(q.subject || '—')}</td>
+                      <td>${esc(q.year || '—')}</td>
+                    </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card"><div class="card-body">
+        <h4 class="card-title mb-4">Questions by Subject</h4>
+        ${perfList.length === 0 ? `<p style="color:var(--text-muted);font-size:var(--text-sm)">Add questions to see distribution.</p>` :
+          perfList.map(s => `
+            <div class="perf-row">
+              <div class="top"><span class="name">${esc(s.name)}</span><span class="pct">${s.count} question${s.count === 1 ? '' : 's'}</span></div>
+              <div class="bar"><div class="fill" style="width:${s.pct}%;background:var(--primary);"></div></div>
+            </div>`).join('')}
+      </div></div>
+    </div>
+  `;
+}
+
+/* SUBJECTS */
+function viewSubjects() {
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>Subject Management</h2>
+        <div class="actions-bar">
+          <button class="btn btn-primary" id="addSubjectBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Subject
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding-bottom:8px">
+          <p class="text-muted text-sm mb-3">Subjects are the categories students pick when practising. Each subject groups its own questions.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Code</th><th>Questions</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${DB.subjects.length === 0 ? `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">No subjects yet.</td></tr>` :
+                DB.subjects.map(s => {
+                  const qCount = DB.questions.filter(q => q.subject === s.name).length;
+                  return `
+                    <tr>
+                      <td><strong>${esc(s.name)}</strong></td>
+                      <td>${esc(s.code || '—')}</td>
+                      <td>${qCount}</td>
+                      <td><span class="badge ${s.status === 'inactive' ? 'badge-danger' : 'badge-success'}">${s.status || 'active'}</span></td>
+                      <td>
+                        <div class="action-buttons">
+                          <button class="btn-ghost-icon" title="Edit" onclick="editSubject('${s.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                          </button>
+                          <button class="btn-ghost-icon danger" title="Delete" onclick="deleteSubject('${s.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+document.addEventListener('click', e => { if (e.target.closest('#addSubjectBtn')) openSubjectForm(); });
+function openSubjectForm(existing) {
+  const isEdit = !!existing;
+  openModal(isEdit ? 'Edit Subject' : 'Add Subject', `
+    <div class="form-group"><label class="form-label">Subject Name *</label><input id="subName" class="form-input" value="${esc(existing?.name || '')}" placeholder="e.g. Further Mathematics"></div>
+    <div class="form-group"><label class="form-label">Code</label><input id="subCode" class="form-input" maxlength="5" value="${esc(existing?.code || '')}" placeholder="e.g. FMT"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select id="subStatus" class="form-select">
+        <option value="active" ${existing?.status !== 'inactive' ? 'selected' : ''}>Active</option>
+        <option value="inactive" ${existing?.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+      </select>
+    </div>
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: isEdit ? 'Save' : 'Create', class: 'btn-primary', onClick: async () => {
+      const name = document.getElementById('subName').value.trim();
+      if (!name) return toast('Name required', 'error');
+      const data = { name, code: document.getElementById('subCode').value.trim().toUpperCase(), status: document.getElementById('subStatus').value };
+      try {
+        if (isEdit) await dbUpdate('subjects', existing.id, data);
+        else await dbPush('subjects', data);
+        closeModal(); toast(isEdit ? 'Updated' : 'Created', 'success');
+      } catch (e) { toast(e.message, 'error'); }
+    }}
+  ]);
+}
+async function editSubject(id) { const s = DB.subjects.find(x => x.id === id); if (s) openSubjectForm(s); }
+async function deleteSubject(id) {
+  confirmDialog({
+    title: 'Delete this subject?',
+    message: 'This will remove the subject. Existing questions will keep their subject name.',
+    confirmLabel: 'Delete',
+    variant: 'danger',
+    onConfirm: async () => {
+      try { await dbRemove('subjects', id); toast('Deleted', 'success'); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+  });
+}
+window.editSubject = editSubject;
+window.deleteSubject = deleteSubject;
+
+/* STUDENTS */
+function viewStudents() {
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>Student Management</h2>
+        <div class="actions-bar">
+          <button class="btn btn-primary" id="addStudentBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Student
+          </button>
+        </div>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>Username</th><th>Class</th><th>Subjects</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${DB.students.length === 0 ? `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">No students yet.</td></tr>` :
+            DB.students.map(s => `
+              <tr>
+                <td><strong>${esc(s.name)}</strong></td>
+                <td>${esc(s.username)}</td>
+                <td>${esc(s.class || '—')}</td>
+                <td>${esc(s.subjects || '—')}</td>
+                <td><span class="badge ${s.status === 'inactive' ? 'badge-danger' : 'badge-success'}">${s.status || 'active'}</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-ghost-icon" title="Edit" onclick="editStudent('${s.id}')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </button>
+                    <button class="btn-ghost-icon danger" title="Delete" onclick="deleteStudent('${s.id}')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+        </tbody>
+      </table></div></div>
+    </div>
+  `;
+}
+document.addEventListener('click', e => { if (e.target.closest('#addStudentBtn')) openStudentForm(); });
+function openStudentForm(existing) {
+  const isEdit = !!existing;
+  openModal(isEdit ? 'Edit Student' : 'Add Student', `
+    <div class="form-group"><label class="form-label">Full Name *</label><input id="stName" class="form-input" value="${esc(existing?.name || '')}"></div>
+    <div class="form-group"><label class="form-label">Username *</label><input id="stUser" class="form-input" value="${esc(existing?.username || '')}"></div>
+    <div class="form-group"><label class="form-label">Class</label><input id="stClass" class="form-input" value="${esc(existing?.class || '')}" placeholder="e.g. SS3 Science"></div>
+    <div class="form-group"><label class="form-label">Subjects</label><input id="stSubjects" class="form-input" value="${esc(existing?.subjects || '')}" placeholder="e.g. Eng, Math, Bio"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select id="stStatus" class="form-select">
+        <option value="active" ${existing?.status !== 'inactive' ? 'selected' : ''}>Active</option>
+        <option value="inactive" ${existing?.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+      </select>
+    </div>
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: isEdit ? 'Save' : 'Create', class: 'btn-primary', onClick: async () => {
+      const name = document.getElementById('stName').value.trim();
+      const username = document.getElementById('stUser').value.trim();
+      if (!name || !username) return toast('Name and username required', 'error');
+      const data = {
+        name, username,
+        class: document.getElementById('stClass').value.trim(),
+        subjects: document.getElementById('stSubjects').value.trim(),
+        status: document.getElementById('stStatus').value
+      };
+      try {
+        if (isEdit) await dbUpdate('students', existing.id, data);
+        else await dbPush('students', data);
+        closeModal(); toast(isEdit ? 'Updated' : 'Created', 'success');
+      } catch (e) { toast(e.message, 'error'); }
+    }}
+  ]);
+}
+async function editStudent(id) { const s = DB.students.find(x => x.id === id); if (s) openStudentForm(s); }
+async function deleteStudent(id) {
+  confirmDialog({
+    title: 'Delete this student?',
+    message: 'This action cannot be undone.',
+    confirmLabel: 'Delete',
+    variant: 'danger',
+    onConfirm: async () => {
+      try { await dbRemove('students', id); toast('Deleted', 'success'); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+  });
+}
+window.editStudent = editStudent;
+window.deleteStudent = deleteStudent;
+
+/* QUESTIONS */
+function viewQuestions() {
+  const f = state.questionFilter;
+  const subjects = [...new Set([...DB.subjects.map(s => s.name), ...DB.questions.map(q => q.subject).filter(Boolean)])].sort();
+  const topics = [...new Set(DB.questions.map(q => q.topic).filter(Boolean))].sort();
+  const years = [...new Set(DB.questions.map(q => q.year).filter(Boolean))].sort();
+
+  const filtered = DB.questions.filter(q => {
+    if (f.subject && q.subject !== f.subject) return false;
+    if (f.topic && q.topic !== f.topic) return false;
+    if (f.difficulty && q.difficulty !== f.difficulty) return false;
+    if (f.year && q.year !== f.year) return false;
+    if (f.search && !(q.text || '').toLowerCase().includes(f.search.toLowerCase())) return false;
+    return true;
+  });
+
+  const filterActive = !!(f.subject || f.topic || f.difficulty || f.year || f.search);
+
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>Question Bank</h2>
+        <div class="actions-bar">
+
+<button class="btn btn-primary" onclick="autoDetectAllTopicsWithAI()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+  AI Topic Detection
+</button>
+
+          <button class="btn btn-danger" onclick="openMasterDelete()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            Delete All
+          </button>
+          <button class="btn btn-secondary" id="importQuestionsBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import
+          </button>
+          <button class="btn btn-primary" id="addQuestionBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Question
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row">
+          <select class="form-select" onchange="state.questionFilter.subject=this.value; render();">
+            <option value="">All Subjects</option>
+            ${subjects.map(s => `<option value="${esc(s)}" ${f.subject === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}
+          </select>
+          <select class="form-select" onchange="state.questionFilter.topic=this.value; render();">
+            <option value="">All Topics</option>
+            ${topics.map(t => `<option value="${esc(t)}" ${f.topic === t ? 'selected' : ''}>${esc(t)}</option>`).join('')}
+          </select>
+          <select class="form-select" onchange="state.questionFilter.difficulty=this.value; render();">
+            <option value="">All Difficulty</option>
+            <option value="Easy" ${f.difficulty === 'Easy' ? 'selected' : ''}>Easy</option>
+            <option value="Medium" ${f.difficulty === 'Medium' ? 'selected' : ''}>Medium</option>
+            <option value="Hard" ${f.difficulty === 'Hard' ? 'selected' : ''}>Hard</option>
+          </select>
+          <select class="form-select" onchange="state.questionFilter.year=this.value; render();">
+            <option value="">All Years</option>
+            ${years.map(y => `<option value="${esc(y)}" ${f.year === y ? 'selected' : ''}>${esc(y)}</option>`).join('')}
+          </select>
+          <input class="form-input" placeholder="Search question text…" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.questionFilter.search=this.value; render();">
+          ${filterActive ? `<button class="btn btn-secondary" onclick="state.questionFilter={subject:'',topic:'',difficulty:'',year:'',search:''}; render();">Reset</button>` : ''}
+          ${filterActive && filtered.length > 0 ? `<button class="btn btn-danger" onclick="openDeleteFiltered()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            Delete Filtered (${filtered.length})
+          </button>` : ''}
+        </div>
+      </div>
+
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Img</th><th>Question</th><th>Subject</th><th>Topic</th><th>Year</th><th>Difficulty</th><th>Correct</th><th>Options</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${filtered.length === 0 ? `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">No questions found.</td></tr>` :
+            filtered.map(q => `
+              <tr>
+                <td>
+                  ${q.image
+                    ? `<a href="${esc(q.image)}" target="_blank"><img class="q-thumb" src="${esc(q.image)}" onerror="this.parentNode.innerHTML='<span style=\\'color:var(--danger);font-size:10px\\'>broken</span>'"></a>`
+                    : '<span style="color:var(--text-muted);font-size:10px">none</span>'}
+                </td>
+                <td style="max-width:280px">${esc(q.text)}</td>
+                <td>${esc(q.subject || '—')}</td>
+                <td>${esc(q.topic || '—')}</td>
+                <td>${esc(q.year || '—')}</td>
+                <td><span class="badge ${q.difficulty==='Easy'?'badge-success':q.difficulty==='Hard'?'badge-danger':'badge-warning'}">${esc(q.difficulty || '—')}</span></td>
+                <td><strong>${esc(q.correct || '—')}</strong></td>
+                <td>${(q.options || []).length}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-ghost-icon" title="Edit" onclick="editQuestion('${q.id}')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </button>
+                    <button class="btn-ghost-icon danger" title="Delete" onclick="deleteQuestion('${q.id}')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+        </tbody>
+      </table></div></div>
+    </div>
+  `;
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#addQuestionBtn')) openQuestionForm();
+  if (e.target.closest('#importQuestionsBtn')) openImportModal();
+});
+
+const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E'];
+
+function openQuestionForm(existing) {
+  const isEdit = !!existing;
+  const opts = existing?.options || [];
+  const optImgs = existing?.optionImages || [];
+  const subjOpts = DB.subjects.length ? DB.subjects : [{name:'English Language'},{name:'Mathematics'},{name:'Biology'},{name:'Physics'},{name:'Chemistry'}];
+
+  const optionRows = OPTION_LETTERS.map((letter, i) => {
+    const raw = opts[i] || '';
+    const value = raw.replace(/^[A-E]\)\s*/, '');
+    const imgUrl = optImgs[i] || '';
+    const hasImg = !!imgUrl;
+    return `
+      <div class="option-row">
+        <div class="opt-label">${letter}</div>
+        <input class="form-input opt-input" id="qOpt${letter}" placeholder="Option ${letter} text (leave blank if not used)" value="${esc(value)}">
+        <div class="opt-img-wrap">
+          <label class="opt-img-btn ${hasImg ? 'has-image' : ''}" title="Upload image for option ${letter}">
+            <input type="file" accept="image/*" onchange="handleOptionImageUpload(this, '${letter}')">
+            ${hasImg
+              ? `<img class="preview-inside" id="optPreview${letter}" src="${esc(imgUrl)}" alt="${letter}">`
+              : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                 <span>Add<br>image</span>`}
+          </label>
+          ${hasImg ? `<button type="button" class="btn-ghost-icon danger" title="Remove image" onclick="removeOptionImage('${letter}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  const explImg = existing?.explanationImage || '';
+  const explBlock = `
+    <div class="form-group">
+      <label class="form-label">Explanation Image (optional)</label>
+      <label class="expl-img-btn">
+        <input type="file" accept="image/*" onchange="handleExplImageUpload(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Choose image for explanation</span>
+      </label>
+      ${explImg ? `<img id="explImgPreview" class="expl-img-preview" src="${esc(explImg)}" alt="explanation">` : `<img id="explImgPreview" class="expl-img-preview hidden">`}
+      ${explImg ? `<button type="button" class="btn btn-secondary btn-sm" style="margin-top:6px;" onclick="removeExplImage()">Remove image</button>` : ''}
+    </div>`;
+
+  openModal(isEdit ? 'Edit Question' : 'Add Question', `
+    <div class="form-group"><label class="form-label">Question Text *</label><textarea id="qText" class="form-textarea">${esc(existing?.text || '')}</textarea></div>
+
+    <div class="form-group">
+      <label class="form-label">Question Image (optional)</label>
+      <input type="file" id="qImage" accept="image/*" onchange="handleQImageUpload(this)">
+      <img id="qImgPrev" class="img-prev ${existing?.image ? '' : 'hidden'}" src="${esc(existing?.image || '')}" onerror="this.classList.add('hidden')">
+      ${existing?.image ? `<button type="button" class="btn btn-secondary btn-sm" style="margin-top:6px;" onclick="removeQImage()">Remove image</button>` : ''}
+    </div>
+
+    <div class="grid grid-2">
+      <div class="form-group"><label class="form-label">Subject</label>
+        <select id="qSubject" class="form-select">
+          ${subjOpts.map(s => `<option ${existing?.subject === s.name ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Topic</label><input id="qTopic" class="form-input" value="${esc(existing?.topic || '')}"></div>
+      <div class="form-group"><label class="form-label">Difficulty</label>
+        <select id="qDifficulty" class="form-select">
+          ${['Easy','Medium','Hard'].map(d => `<option ${existing?.difficulty === d ? 'selected' : ''}>${d}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Correct Option</label>
+        <select id="qCorrect" class="form-select">
+          ${OPTION_LETTERS.map(c => `<option ${existing?.correct === c ? 'selected' : ''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Year</label><input id="qYear" class="form-input" value="${esc(existing?.year || '')}"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Options (A–E — leave blank if not used)</label>
+      ${optionRows}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Explanation</label>
+      <textarea id="qExplanation" class="form-textarea">${esc(existing?.explanation || '')}</textarea>
+    </div>
+
+    ${explBlock}
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: isEdit ? 'Save Changes' : 'Create Question', class: 'btn-primary', onClick: () => saveQuestion(existing?.id) }
+  ], true);
+
+  window.__qFormState = {
+    mainImage: existing?.image || null,
+    optionImages: [...optImgs],
+    explanationImage: existing?.explanationImage || null
+  };
+}
+
+function handleQImageUpload(input) {
+  const f = input.files[0]; if (!f) return;
+  const preview = document.getElementById('qImgPrev');
+  preview.src = URL.createObjectURL(f);
+  preview.classList.remove('hidden');
+  window.__qFormState._mainFile = f;
+}
+function removeQImage() {
+  const p = document.getElementById('qImgPrev');
+  if (p) { p.src = ''; p.classList.add('hidden'); }
+  window.__qFormState.mainImage = null;
+  window.__qFormState._mainFile = null;
+  const inp = document.getElementById('qImage');
+  if (inp) inp.value = '';
+}
+function handleOptionImageUpload(input, letter) {
+  const f = input.files[0]; if (!f) return;
+  const label = input.closest('.opt-img-btn');
+  label.classList.add('has-image');
+  label.innerHTML = `<input type="file" accept="image/*" onchange="handleOptionImageUpload(this, '${letter}')"><img class="preview-inside" id="optPreview${letter}" src="${URL.createObjectURL(f)}" alt="${letter}">`;
+  const idx = OPTION_LETTERS.indexOf(letter);
+  if (!window.__qFormState._optionFiles) window.__qFormState._optionFiles = {};
+  window.__qFormState._optionFiles[idx] = f;
+}
+function removeOptionImage(letter) {
+  const idx = OPTION_LETTERS.indexOf(letter);
+  window.__qFormState.optionImages[idx] = null;
+  if (window.__qFormState._optionFiles) delete window.__qFormState._optionFiles[idx];
+  const label = document.querySelector(`#qOpt${letter}`).parentElement.querySelector('.opt-img-btn');
+  label.classList.remove('has-image');
+  label.innerHTML = `<input type="file" accept="image/*" onchange="handleOptionImageUpload(this, '${letter}')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    <span>Add<br>image</span>`;
+}
+function handleExplImageUpload(input) {
+  const f = input.files[0]; if (!f) return;
+  const preview = document.getElementById('explImgPreview');
+  preview.src = URL.createObjectURL(f);
+  preview.classList.remove('hidden');
+  window.__qFormState._explFile = f;
+}
+function removeExplImage() {
+  const p = document.getElementById('explImgPreview');
+  if (p) { p.src = ''; p.classList.add('hidden'); }
+  window.__qFormState.explanationImage = null;
+  window.__qFormState._explFile = null;
+}
+async function saveQuestion(existingId) {
+  const text = document.getElementById('qText').value.trim();
+  if (!text) return toast('Question text required', 'error');
+  const st = window.__qFormState || { mainImage: null, optionImages: [], explanationImage: null };
+  toast('Saving…');
+
+  let mainImage = st.mainImage;
+  if (st._mainFile) {
+    try { mainImage = await uploadToCloudinary(st._mainFile); }
+    catch (e) { toast('Main image upload failed: ' + e.message, 'error'); return; }
+  }
+
+  const options = [];
+  const optionImages = [];
+  for (let i = 0; i < OPTION_LETTERS.length; i++) {
+    const letter = OPTION_LETTERS[i];
+    const v = (document.getElementById('qOpt' + letter).value || '').trim();
+    if (!v) continue;
+    options.push(`${letter}) ${v}`);
+    let imgUrl = st.optionImages[i] || null;
+    if (st._optionFiles && st._optionFiles[i]) {
+      try { imgUrl = await uploadToCloudinary(st._optionFiles[i]); }
+      catch (e) { toast(`Option ${letter} image failed: ` + e.message, 'error'); }
+    }
+    optionImages.push(imgUrl);
+  }
+
+  let explanationImage = st.explanationImage;
+  if (st._explFile) {
+    try { explanationImage = await uploadToCloudinary(st._explFile); }
+    catch (e) { toast('Explanation image failed: ' + e.message, 'error'); return; }
+  }
+
+  const data = {
+    text,
+    subject: document.getElementById('qSubject').value,
+    topic: document.getElementById('qTopic').value.trim(),
+    difficulty: document.getElementById('qDifficulty').value,
+    correct: document.getElementById('qCorrect').value,
+    year: document.getElementById('qYear').value.trim(),
+    options: options,
+    explanation: document.getElementById('qExplanation').value.trim(),
+    image: mainImage,
+    optionImages: optionImages,
+    explanationImage: explanationImage
+  };
+
+  try {
+    if (existingId) await dbUpdate('questions', existingId, data);
+    else await dbPush('questions', data);
+    window.__qFormState = null;
+    closeModal();
+    toast(existingId ? 'Updated' : 'Created', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+async function editQuestion(id) { const q = DB.questions.find(x => x.id === id); if (q) openQuestionForm(q); }
+async function deleteQuestion(id) {
+  const q = DB.questions.find(x => x.id === id);
+  if (!q) return;
+  const preview = (q.text || '').slice(0, 80) + ((q.text || '').length > 80 ? '…' : '');
+  confirmDialog({
+    title: 'Delete this question?',
+    message: `<strong>"${esc(preview)}"</strong><br><br>This action cannot be undone.`,
+    confirmLabel: 'Delete',
+    variant: 'danger',
+    onConfirm: async () => {
+      try { await dbRemove('questions', id); toast('Deleted', 'success'); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+  });
+}
+window.editQuestion = editQuestion;
+window.deleteQuestion = deleteQuestion;
+window.handleQImageUpload = handleQImageUpload;
+window.removeQImage = removeQImage;
+window.handleOptionImageUpload = handleOptionImageUpload;
+window.removeOptionImage = removeOptionImage;
+window.handleExplImageUpload = handleExplImageUpload;
+window.removeExplImage = removeExplImage;
+
+async function openMasterDelete() {
+  const total = DB.questions.length;
+  if (total === 0) { toast('No questions to delete', ''); return; }
+  confirmDialog({
+    title: 'Delete ALL questions?',
+    message: `You are about to delete <strong>${total}</strong> question${total === 1 ? '' : 's'} from the entire bank.<br><br>This will wipe everything and cannot be undone.`,
+    confirmLabel: `Delete All ${total}`,
+    cancelLabel: 'Cancel',
+    variant: 'danger',
+    onConfirm: async () => {
+      try {
+        const { db, ref, remove } = window.__fb;
+        await remove(ref(db, 'questions'));
+        toast(`Deleted ${total} question${total === 1 ? '' : 's'}`, 'success');
+      } catch (e) {
+        console.error(e);
+        toast('Delete failed: ' + e.message, 'error');
+      }
+    }
+  });
+}
+window.openMasterDelete = openMasterDelete;
+
+function openDeleteFiltered() {
+  const f = state.questionFilter;
+  const filtered = DB.questions.filter(q => {
+    if (f.subject && q.subject !== f.subject) return false;
+    if (f.topic && q.topic !== f.topic) return false;
+    if (f.difficulty && q.difficulty !== f.difficulty) return false;
+    if (f.year && q.year !== f.year) return false;
+    if (f.search && !(q.text || '').toLowerCase().includes(f.search.toLowerCase())) return false;
+    return true;
+  });
+  if (filtered.length === 0) { toast('Nothing to delete', ''); return; }
+
+  const parts = [];
+  if (f.subject) parts.push(`subject <strong>${esc(f.subject)}</strong>`);
+  if (f.topic) parts.push(`topic <strong>${esc(f.topic)}</strong>`);
+  if (f.difficulty) parts.push(`difficulty <strong>${esc(f.difficulty)}</strong>`);
+  if (f.year) parts.push(`year <strong>${esc(f.year)}</strong>`);
+  if (f.search) parts.push(`search "<strong>${esc(f.search)}</strong>"`);
+  const desc = parts.join(' and ') || 'the current filter';
+
+  confirmDialog({
+    title: `Delete ${filtered.length} question${filtered.length === 1 ? '' : 's'}?`,
+    message: `You are about to delete all questions matching ${desc}.<br><br>This cannot be undone.`,
+    confirmLabel: `Delete ${filtered.length}`,
+    variant: 'danger',
+    onConfirm: async () => {
+      try {
+        const { db, ref, remove } = window.__fb;
+        await Promise.all(filtered.map(q => remove(ref(db, 'questions/' + q.id))));
+        toast(`Deleted ${filtered.length} question${filtered.length === 1 ? '' : 's'}`, 'success');
+      } catch (e) {
+        console.error(e);
+        toast('Delete failed: ' + e.message, 'error');
+      }
+    }
+  });
+}
+window.openDeleteFiltered = openDeleteFiltered;
+
+/* =========================================================
+   CREATE QUIZ (with multi-subject support)
+   ========================================================= */
+function viewCreateMock() {
+  const sb = state.mockBuilder;
+  const selected = sb.selectedQuestions.map(id => DB.questions.find(q => q.id === id)).filter(Boolean);
+  const editingMock = sb.editId ? DB.mocks.find(m => m.id === sb.editId) : null;
+
+  // Build available subjects list (from DB.subjects or fallback from questions)
+  const availableSubjects = DB.subjects.length
+    ? DB.subjects.filter(s => s.status !== 'inactive').map(s => s.name)
+    : [...new Set(DB.questions.map(q => q.subject).filter(Boolean))].sort();
+
+  // Current selected subjects (from editing mock or builder state)
+  let selectedSubjects = sb.selectedSubjects || [];
+  if (editingMock && editingMock.subjects && Array.isArray(editingMock.subjects)) {
+    selectedSubjects = editingMock.subjects;
+    sb.selectedSubjects = selectedSubjects;
+  } else if (editingMock && editingMock.subject) {
+    // Backward compat: single subject string
+    selectedSubjects = [editingMock.subject];
+    sb.selectedSubjects = selectedSubjects;
+  }
+
+  const title = editingMock?.title || '';
+  const duration = editingMock?.duration || '45 min';
+  const status = editingMock?.status || 'draft';
+  const instructions = editingMock?.instructions || 'Answer all questions. Each question carries equal marks. You have 45 minutes to complete this test. Do not refresh the page during the exam.';
+  const startDate = editingMock?.start && editingMock.start !== '—' ? editingMock.start : '';
+  const endDate = editingMock?.end && editingMock.end !== '—' ? editingMock.end : '';
+
+  const MAX_SUBJECTS = 4;
+  const reachedMax = selectedSubjects.length >= MAX_SUBJECTS;
+
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>${editingMock ? 'Edit Quiz' : 'Create Quiz'}</h2>
+        <div class="actions-bar">
+          <button class="btn btn-secondary" onclick="adminNav('published')">? Back to Quizzes</button>
+          <button class="btn btn-primary" onclick="openImportIntoQuizModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import Questions into Quiz
+          </button>
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <div class="card-body">
+          <h4 class="card-title mb-4">Quiz Information</h4>
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Quiz Title *</label>
+              <input class="form-input" id="quizTitle" value="${esc(title)}" placeholder="e.g. JAMB Mock 2025 — Set B">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration</label>
+              <input class="form-input" id="quizDuration" value="${esc(duration)}" placeholder="45 min">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="quizStatus">
+                <option value="draft" ${status !== 'published' ? 'selected' : ''}>Draft</option>
+                <option value="published" ${status === 'published' ? 'selected' : ''}>Published</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULTI-SUBJECT PICKER -->
+      <div class="card mb-5">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div>
+              <h4 class="card-title" style="margin:0">Subjects for this Quiz</h4>
+              <p class="text-muted text-xs" style="margin-top:4px;">Select up to <strong>${MAX_SUBJECTS}</strong> subjects. The quiz will include questions from all selected subjects.</p>
+            </div>
+            <span class="badge ${reachedMax ? 'badge-warning' : 'badge-primary'}">${selectedSubjects.length} / ${MAX_SUBJECTS}</span>
+          </div>
+
+          <!-- Selected chips -->
+          <div class="subject-chips ${selectedSubjects.length === 0 ? 'empty' : ''}" style="margin-bottom:14px;">
+            ${selectedSubjects.length === 0
+              ? `<span class="empty-text">No subjects selected yet — pick from the list below.</span>`
+              : selectedSubjects.map(s => `
+                  <span class="subject-chip">
+                    ${esc(s)}
+                    <button class="chip-x" type="button" onclick="removeQuizSubject('${esc(s).replace(/'/g, "\\'")}')" title="Remove">?</button>
+                  </span>
+                `).join('')}
+          </div>
+
+          <!-- Subject grid -->
+          <div class="subject-grid">
+            ${availableSubjects.length === 0
+              ? `<div class="empty-note" style="grid-column:1/-1;">No subjects available. Add subjects first or add questions with subject names.</div>`
+              : availableSubjects.map(s => {
+                  const isSel = selectedSubjects.includes(s);
+                  const qCount = DB.questions.filter(q => q.subject === s).length;
+                  const disabled = !isSel && reachedMax;
+                  return `
+                    <button type="button" class="subject-tile ${isSel ? 'selected' : ''} ${disabled ? 'disabled' : ''}" ${disabled ? 'disabled' : ''} onclick="${disabled ? '' : `toggleQuizSubject('${esc(s).replace(/'/g, "\\'")}')`}">
+                      <div class="st-name">
+                        <span>${esc(s)}</span>
+                        <span class="st-check">${isSel ? '?' : ''}</span>
+                      </div>
+                      <span class="st-count">${qCount} question${qCount === 1 ? '' : 's'}</span>
+                    </button>
+                  `;
+                }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <div class="card-body">
+          <h4 class="card-title mb-4">Instructions for Students</h4>
+          <p class="text-muted text-sm mb-3">These instructions will be shown to students before they start the quiz.</p>
+          <div class="form-group">
+            <label class="form-label">Quiz Instructions</label>
+            <textarea class="form-textarea" id="quizInstructions" style="min-height:140px;">${esc(instructions)}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <h4 class="card-title" style="margin:0">Selected Questions (${selected.length})</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="openQuestionPicker()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add from Bank
+              </button>
+              ${selected.length > 0 ? `<button class="btn btn-secondary btn-sm" onclick="clearSelectedQuestions()">Clear all</button>` : ''}
+            </div>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius);max-height:400px;overflow:auto">
+            ${selected.length === 0
+              ? `<div class="empty-note">No questions added yet. Click "Add from Bank" or "Import Questions into Quiz".</div>`
+              : selected.map((q, i) => `
+                <div class="selected-q-row">
+                  <div class="q-num">${i+1}</div>
+                  <div class="q-info">
+                    <div class="q-text">${esc(q.text)}</div>
+                    <div class="q-meta">${esc(q.subject || '—')} • ${esc(q.topic || '—')} • ${esc(q.difficulty || '—')}</div>
+                  </div>
+                  <button class="btn-ghost-icon danger" title="Remove" onclick="removeQuestionFromMock('${q.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <div class="card-body">
+          <h4 class="card-title mb-4">Scheduling</h4>
+          <p class="text-muted text-sm mb-3">Students can only take the quiz between these dates.</p>
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input class="form-input" type="date" id="quizStartDate" value="${esc(startDate)}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">End Date</label>
+              <input class="form-input" type="date" id="quizEndDate" value="${esc(endDate)}">
+            </div>
+          </div>
+          <p class="text-xs text-muted mt-2">Leave both blank to allow anytime access.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="saveQuiz('draft')">Save as Draft</button>
+        <button class="btn btn-success" onclick="saveQuiz('published')">Publish Quiz</button>
+        <button class="btn btn-secondary" onclick="adminNav('published')">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+/* Multi-subject helpers */
+function toggleQuizSubject(name) {
+  if (!state.mockBuilder.selectedSubjects) state.mockBuilder.selectedSubjects = [];
+  const arr = state.mockBuilder.selectedSubjects;
+  const idx = arr.indexOf(name);
+  const MAX = 4;
+  if (idx > -1) {
+    arr.splice(idx, 1);
+  } else {
+    if (arr.length >= MAX) {
+      toast(`You can select up to ${MAX} subjects per quiz`, 'error');
+      return;
+    }
+    arr.push(name);
+  }
+  render();
+}
+function removeQuizSubject(name) {
+  if (!state.mockBuilder.selectedSubjects) return;
+  state.mockBuilder.selectedSubjects = state.mockBuilder.selectedSubjects.filter(s => s !== name);
+  render();
+}
+window.toggleQuizSubject = toggleQuizSubject;
+window.removeQuizSubject = removeQuizSubject;
+
+function openQuestionPicker() {
+  const sb = state.mockBuilder;
+  const currentIds = new Set(sb.selectedQuestions);
+  const subjects = [...new Set(DB.questions.map(q => q.subject).filter(Boolean))].sort();
+  const topics = [...new Set(DB.questions.map(q => q.topic).filter(Boolean))].sort();
+  const years = [...new Set(DB.questions.map(q => q.year).filter(Boolean))].sort();
+
+  // Pre-filter by selected subjects if any are selected
+  const preselectedSubjects = sb.selectedSubjects || [];
+
+  const rows = DB.questions.length === 0
+    ? `<div class="empty-note">No questions in the bank yet.</div>`
+    : DB.questions.map(q => `
+        <div class="mock-picker-row"
+             data-subject="${esc(q.subject || '')}"
+             data-topic="${esc(q.topic || '')}"
+             data-year="${esc(q.year || '')}"
+             data-text="${esc((q.text || '').toLowerCase())}">
+          <input type="checkbox" class="picker-check" value="${q.id}" ${currentIds.has(q.id) ? 'checked' : ''}>
+          <div class="info">
+            <div class="q-text">${esc(q.text)}</div>
+            <div class="q-meta">${esc(q.subject || '—')} • ${esc(q.topic || '—')} • ${esc(q.difficulty || '—')} ${q.year ? '• ' + esc(q.year) : ''}</div>
+          </div>
+        </div>`).join('');
+
+  openModal('Add Questions from Bank', `
+    ${preselectedSubjects.length > 0 ? `
+      <div style="padding:10px 12px;background:var(--primary-light);border-radius:var(--radius);margin-bottom:12px;font-size:var(--text-sm);color:var(--primary);">
+        <strong>Showing questions for:</strong> ${preselectedSubjects.map(s => esc(s)).join(', ')}
+        <div style="margin-top:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="preselectAllQuizSubjects()">Select all from these subjects</button>
+        </div>
+      </div>
+    ` : ''}
+
+    <div class="grid grid-2" style="margin-bottom:12px;gap:10px;">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Filter Subject</label>
+        <select class="form-select" id="pickerFilterSubject" onchange="filterPicker()">
+          <option value="">All Subjects</option>
+          ${subjects.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Filter Topic</label>
+        <select class="form-select" id="pickerFilterTopic" onchange="filterPicker()">
+          <option value="">All Topics</option>
+          ${topics.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Filter Year</label>
+        <select class="form-select" id="pickerFilterYear" onchange="filterPicker()">
+          <option value="">All Years</option>
+          ${years.map(y => `<option value="${esc(y)}">${esc(y)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Search Question Text</label>
+        <input class="form-input" id="pickerSearch" placeholder="Search…" oninput="filterPicker()">
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <span class="text-xs text-muted" id="pickerCount">0 selected</span>
+      <div style="display:flex;gap:6px;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="pickerSelectAll()">Select All</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="pickerDeselectAll()">Deselect All</button>
+      </div>
+    </div>
+
+    <div class="mock-picker" id="pickerList">${rows}</div>
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: 'Add Selected', class: 'btn-primary', onClick: applyQuestionPicker }
+  ], true);
+
+  updatePickerCount();
+}
+
+function preselectAllQuizSubjects() {
+  const subjects = state.mockBuilder.selectedSubjects || [];
+  if (subjects.length === 0) return;
+  document.querySelectorAll('#pickerList .mock-picker-row').forEach(row => {
+    if (subjects.includes(row.dataset.subject)) {
+      const cb = row.querySelector('.picker-check');
+      if (cb) cb.checked = true;
+    }
+  });
+  updatePickerCount();
+}
+window.preselectAllQuizSubjects = preselectAllQuizSubjects;
+
+function filterPicker() {
+  const subj = (document.getElementById('pickerFilterSubject')?.value || '').toLowerCase();
+  const topic = (document.getElementById('pickerFilterTopic')?.value || '').toLowerCase();
+  const year = document.getElementById('pickerFilterYear')?.value || '';
+  const txt = (document.getElementById('pickerSearch')?.value || '').toLowerCase();
+  document.querySelectorAll('#pickerList .mock-picker-row').forEach(row => {
+    const matchS = !subj || (row.dataset.subject || '').toLowerCase() === subj;
+    const matchT = !topic || (row.dataset.topic || '').toLowerCase() === topic;
+    const matchY = !year || (row.dataset.year || '') === year;
+    const matchQ = !txt || (row.dataset.text || '').includes(txt);
+    row.style.display = (matchS && matchT && matchY && matchQ) ? 'flex' : 'none';
+  });
+  updatePickerCount();
+}
+
+function pickerSelectAll() {
+  document.querySelectorAll('#pickerList .mock-picker-row').forEach(row => {
+    if (row.style.display !== 'none') {
+      const cb = row.querySelector('.picker-check');
+      if (cb) cb.checked = true;
+    }
+  });
+  updatePickerCount();
+}
+function pickerDeselectAll() {
+  document.querySelectorAll('#pickerList .mock-picker-row').forEach(row => {
+    if (row.style.display !== 'none') {
+      const cb = row.querySelector('.picker-check');
+      if (cb) cb.checked = false;
+    }
+  });
+  updatePickerCount();
+}
+function updatePickerCount() {
+  const el = document.getElementById('pickerCount');
+  if (!el) return;
+  const checked = document.querySelectorAll('#pickerList .picker-check:checked').length;
+  const visible = [...document.querySelectorAll('#pickerList .mock-picker-row')].filter(r => r.style.display !== 'none').length;
+  el.textContent = `${checked} selected (${visible} visible)`;
+}
+document.addEventListener('change', e => {
+  if (e.target.classList.contains('picker-check')) updatePickerCount();
+});
+
+function applyQuestionPicker() {
+  const checked = [...document.querySelectorAll('#pickerList .picker-check:checked')].map(c => c.value);
+  state.mockBuilder.selectedQuestions = checked;
+  closeModal();
+  render();
+}
+function removeQuestionFromMock(id) {
+  state.mockBuilder.selectedQuestions = state.mockBuilder.selectedQuestions.filter(x => x !== id);
+  render();
+}
+function clearSelectedQuestions() {
+  confirmDialog({
+    title: 'Remove all selected questions?',
+    message: 'This will clear the current quiz selection.',
+    confirmLabel: 'Clear',
+    variant: 'warning',
+    onConfirm: () => {
+      state.mockBuilder.selectedQuestions = [];
+      render();
+    }
+  });
+}
+window.openQuestionPicker = openQuestionPicker;
+window.filterPicker = filterPicker;
+window.pickerSelectAll = pickerSelectAll;
+window.pickerDeselectAll = pickerDeselectAll;
+window.updatePickerCount = updatePickerCount;
+window.applyQuestionPicker = applyQuestionPicker;
+window.removeQuestionFromMock = removeQuestionFromMock;
+window.clearSelectedQuestions = clearSelectedQuestions;
+
+function openImportIntoQuizModal() {
+  openModal('Import Questions into Quiz', `
+    <p style="margin-bottom:12px">Upload a <strong>CSV, XLSX, or DOCX</strong> file. The imported questions will be saved to the Question Bank AND added to this quiz.</p>
+    <div class="drag" id="quizImportDrag">
+      <p>Drag & drop your file here</p>
+      <p class="text-sm text-muted" style="font-weight:400;">or click to browse</p>
+      <input type="file" id="quizImportFile" accept=".csv,.xlsx,.xls,.docx" style="display:none">
+    </div>
+    <div id="quizImportProgress" class="hidden" style="margin-top:16px">
+      <p id="quizImportLabel" class="text-sm text-muted">Importing…</p>
+      <div class="progress"><div class="progress-bar" id="quizImportFill" style="width:0%"></div></div>
+      <p id="quizImportPct" class="text-xs text-muted" style="margin-top:4px">0%</p>
+    </div>
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: 'Preview & Import', class: 'btn-primary', onClick: handleQuizImport }
+  ], true);
+  setTimeout(() => {
+    const area = document.getElementById('quizImportDrag');
+    const input = document.getElementById('quizImportFile');
+    if (!area || !input) return;
+    area.onclick = () => input.click();
+    ['dragenter','dragover'].forEach(ev => area.addEventListener(ev, e => { e.preventDefault(); area.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(ev => area.addEventListener(ev, e => { e.preventDefault(); area.classList.remove('dragover'); }));
+    area.addEventListener('drop', e => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) {
+        input.files = e.dataTransfer.files;
+        area.querySelector('p').textContent = e.dataTransfer.files[0].name;
+      }
+    });
+  }, 50);
+}
+async function handleQuizImport() {
+  const fi = document.getElementById('quizImportFile');
+  if (!fi.files[0]) return toast('Please select a file', 'error');
+  const file = fi.files[0];
+  const ext = file.name.split('.').pop().toLowerCase();
+  try {
+    let rows = [];
+    if (ext === 'csv') rows = await parseCSV(file);
+    else if (ext === 'xlsx' || ext === 'xls') rows = await parseXLSX(file);
+    else if (ext === 'docx') rows = await parseDOCX(file);
+    else return toast('Unsupported file type', 'error');
+    if (!rows.length) { toast('No questions found in file.', 'error'); return; }
+    showQuizImportPreview(rows);
+  } catch (e) { console.error(e); toast('Read error: ' + e.message, 'error'); }
+}
+function showQuizImportPreview(rows) {
+  const questions = rows.map(r => {
+    const get = k => (r[k] || '').toString();
+    const correctRaw = get('Correct Answer') || get('correct') || '';
+    return {
+      subject: get('Subject') || 'General',
+      topic: get('Topic') || 'General',
+      text: get('Question Text') || '',
+      options: ['A','B','C','D'].map(l => `${l}) ${get('Option ' + l) || '—'}`),
+      correct: normalizeCorrect(correctRaw),
+      explanation: get('Explanation') || '',
+      year: get('Year') || '',
+      difficulty: get('Difficulty') || 'Medium',
+      imageUrl: get('Image URL') || '',
+      __imgQuestion: r.__imgQuestion || null,
+      __imgOptionA: r.__imgOptionA || null,
+      __imgOptionB: r.__imgOptionB || null,
+      __imgOptionC: r.__imgOptionC || null,
+      __imgOptionD: r.__imgOptionD || null,
+      __imgExplanation: r.__imgExplanation || null,
+      __media: r.__media || null
+    };
+  }).filter(q => q.text);
+
+  const html = `
+    <p style="margin-bottom:12px;font-size:var(--text-sm);color:var(--text-muted)">Found <strong>${questions.length}</strong> question(s). They will be added to the Quiz and saved to the Bank.</p>
+    <div style="max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:var(--radius)">
+      <table class="preview-table">
+        <thead><tr><th>#</th><th>Q-Img</th><th>Opt Imgs</th><th>Subject</th><th>Question</th><th>Correct</th></tr></thead>
+        <tbody>
+          ${questions.map((q,i) => {
+            const hasQ = q.__imgQuestion && q.__media && q.__media[q.__imgQuestion];
+            const optCount = [q.__imgOptionA,q.__imgOptionB,q.__imgOptionC,q.__imgOptionD].filter(Boolean).length;
+            return `
+              <tr>
+                <td>${i+1}</td>
+                <td>${hasQ ? `<img data-idx="${i}" class="qprev-img">` : '—'}</td>
+                <td>${optCount > 0 ? `${optCount} img` : '—'}</td>
+                <td>${esc(q.subject)}</td>
+                <td style="max-width:220px">${esc(q.text)}</td>
+                <td><strong>${esc(q.correct)}</strong></td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div id="quizImportProgress" style="margin-top:16px">
+      <p id="quizImportLabel" class="text-sm text-muted">Ready to import.</p>
+      <div class="progress"><div class="progress-bar" id="quizImportFill" style="width:0%"></div></div>
+      <p id="quizImportPct" class="text-xs text-muted" style="margin-top:4px">0%</p>
+    </div>
+  `;
+  openModal('Preview Import into Quiz', html, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: 'Import & Add to Quiz', class: 'btn-primary', onClick: () => runQuizImport(questions) }
+  ], true);
+
+  setTimeout(() => {
+    document.querySelectorAll('.qprev-img').forEach(img => {
+      const i = parseInt(img.dataset.idx);
+      const q = questions[i];
+      if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion]) {
+        img.src = URL.createObjectURL(q.__media[q.__imgQuestion]);
+      }
+    });
+  }, 50);
+}
+async function runQuizImport(questions) {
+  const label = document.getElementById('quizImportLabel');
+  const fill = document.getElementById('quizImportFill');
+  const pct = document.getElementById('quizImportPct');
+  document.querySelectorAll('#modalFoot button').forEach(b => b.disabled = true);
+
+  let imported = 0, imgOk = 0, imgFail = 0;
+  const newIds = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    const q = questions[i];
+    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}…`;
+
+    let mainImage = null;
+    if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion]) {
+      try { mainImage = await uploadToCloudinary(q.__media[q.__imgQuestion]); imgOk++; } catch (e) { imgFail++; }
+    }
+    const optionImages = [null, null, null, null];
+    const optSlots = [q.__imgOptionA, q.__imgOptionB, q.__imgOptionC, q.__imgOptionD];
+    for (let o = 0; o < 4; o++) {
+      const path = optSlots[o];
+      if (path && q.__media && q.__media[path]) {
+        try { optionImages[o] = await uploadToCloudinary(q.__media[path]); imgOk++; } catch (e) { imgFail++; }
+      }
+    }
+    let explanationImage = null;
+    if (q.__imgExplanation && q.__media && q.__media[q.__imgExplanation]) {
+      try { explanationImage = await uploadToCloudinary(q.__media[q.__imgExplanation]); imgOk++; } catch (e) { imgFail++; }
+    }
+
+    const data = {
+      text: q.text, subject: q.subject, topic: q.topic,
+      difficulty: q.difficulty, correct: q.correct, year: q.year,
+      options: q.options, optionImages, explanation: q.explanation,
+      explanationImage, image: mainImage
+    };
+    try {
+      const newId = await dbPush('questions', data);
+      newIds.push(newId);
+      imported++;
+    } catch (e) { console.error('DB fail', e); }
+
+    const p = Math.round(((i+1)/questions.length)*100);
+    if (fill) fill.style.width = p + '%';
+    if (pct) pct.textContent = p + '%';
+  }
+
+  state.mockBuilder.selectedQuestions = [
+    ...new Set([...state.mockBuilder.selectedQuestions, ...newIds])
+  ];
+
+  // Auto-add subjects from imported questions
+  const importedSubjects = [...new Set(questions.map(q => q.subject).filter(Boolean))];
+  if (!state.mockBuilder.selectedSubjects) state.mockBuilder.selectedSubjects = [];
+  const MAX = 4;
+  importedSubjects.forEach(s => {
+    if (state.mockBuilder.selectedSubjects.length < MAX && !state.mockBuilder.selectedSubjects.includes(s)) {
+      state.mockBuilder.selectedSubjects.push(s);
+    }
+  });
+
+  if (label) label.textContent = `Done! Imported ${imported} question(s), added to quiz.`;
+  setTimeout(() => {
+    closeModal();
+    toast(`Imported ${imported} question(s) into quiz.`, 'success');
+    render();
+  }, 700);
+}
+
+/* SAVE QUIZ — Multi-subject support */
+async function saveQuiz(status) {
+  const title = document.getElementById('quizTitle').value.trim();
+  if (!title) return toast('Quiz title required', 'error');
+
+  const subjects = state.mockBuilder.selectedSubjects || [];
+  if (subjects.length === 0) return toast('Please select at least one subject for this quiz', 'error');
+  if (subjects.length > 4) return toast('Maximum 4 subjects per quiz', 'error');
+
+  const startDate = document.getElementById('quizStartDate').value || '';
+  const endDate = document.getElementById('quizEndDate').value || '';
+
+  if (startDate && endDate) {
+    const s = new Date(startDate);
+    const e = new Date(endDate);
+    if (e < s) return toast('End date must be on or after start date', 'error');
+  }
+
+  const sb = state.mockBuilder;
+  const data = {
+    title,
+    subjects: subjects,                      // NEW: array of subjects
+    subject: subjects.join(', '),            // BACKWARD COMPAT: string (for legacy readers)
+    duration: document.getElementById('quizDuration').value.trim() || '45 min',
+    status,
+    instructions: document.getElementById('quizInstructions').value.trim(),
+    start: startDate || '—',
+    end: endDate || '—',
+    questions: sb.selectedQuestions.length,
+    questionIds: sb.selectedQuestions,
+    updatedAt: Date.now()
+  };
+
+  try {
+    if (sb.editId) {
+      await dbUpdate('mocks', sb.editId, data);
+      toast('Quiz updated', 'success');
+    } else {
+      await dbPush('mocks', data);
+      toast('Quiz created', 'success');
+    }
+    // Reset builder and navigate back to Published Quizzes list
+    state.mockBuilder = { selectedQuestions: [], editId: null, selectedSubjects: [] };
+    adminNav('published');
+  } catch (e) { toast(e.message, 'error'); }
+}
+window.saveQuiz = saveQuiz;
+window.openImportIntoQuizModal = openImportIntoQuizModal;
+
+/* PUBLISHED */
+function viewMocks() {
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>Published Quizzes</h2>
+        <button class="btn btn-primary" onclick="startNewQuiz()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Quiz
+        </button>
+      </div>
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>Title</th><th>Subjects</th><th>Questions</th><th>Duration</th><th>Status</th><th>Start</th><th>End</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${DB.mocks.length === 0 ? `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">No quizzes yet.</td></tr>` :
+            DB.mocks.map(m => {
+              const subjectList = (m.subjects && Array.isArray(m.subjects) && m.subjects.length)
+                ? m.subjects
+                : (m.subject ? [m.subject] : []);
+              const subjectDisplay = subjectList.length === 0
+                ? '—'
+                : subjectList.map(s => `<span class="badge badge-primary" style="margin-right:4px;">${esc(s)}</span>`).join('');
+              return `
+                <tr>
+                  <td><strong>${esc(m.title)}</strong></td>
+                  <td style="max-width:260px">${subjectDisplay}</td>
+                  <td>${m.questions || 0}</td>
+                  <td>${esc(m.duration || '—')}</td>
+                  <td><span class="badge ${m.status==='published'?'badge-success':'badge-warning'}">${m.status || 'draft'}</span></td>
+                  <td>${esc(m.start && m.start !== '—' ? m.start : 'Anytime')}</td>
+                  <td>${esc(m.end && m.end !== '—' ? m.end : 'Anytime')}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-ghost-icon" title="Edit" onclick="startEditQuiz('${m.id}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                      </button>
+                      <button class="btn-ghost-icon danger" title="Delete" onclick="deleteMock('${m.id}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>`;
+            }).join('')}
+        </tbody>
+      </table></div></div>
+    </div>
+  `;
+}
+function startNewQuiz() {
+  state.mockBuilder = { selectedQuestions: [], editId: null, selectedSubjects: [] };
+  adminNav('createMock');
+}
+function startEditQuiz(id) {
+  const m = DB.mocks.find(x => x.id === id);
+  if (!m) return;
+  // Handle backward compat: if old mock has `subject` string but not `subjects` array
+  let subjects = [];
+  if (Array.isArray(m.subjects)) subjects = m.subjects.slice(0, 4);
+  else if (m.subject) subjects = [m.subject];
+  state.mockBuilder = {
+    selectedQuestions: m.questionIds || [],
+    editId: id,
+    selectedSubjects: subjects
+  };
+  adminNav('createMock');
+}
+async function deleteMock(id) {
+  confirmDialog({
+    title: 'Delete this quiz?',
+    message: 'The quiz will be removed. Questions in the bank are not affected.',
+    confirmLabel: 'Delete',
+    variant: 'danger',
+    onConfirm: async () => {
+      try { await dbRemove('mocks', id); toast('Deleted', 'success'); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+  });
+}
+window.startNewQuiz = startNewQuiz;
+window.startEditQuiz = startEditQuiz;
+window.deleteMock = deleteMock;
+
+/* RESULTS */
+function viewResults() {
+  const f = state.resultFilter;
+  const allResults = DB.results || [];
+
+  const students = [...new Set(allResults.map(r => r.studentName).filter(Boolean))].sort();
+  const subjects = [...new Set(allResults.map(r => r.subject).filter(Boolean))].sort();
+  const classes = [...new Set(allResults.map(r => r.studentClass).filter(Boolean))].sort();
+
+  const filtered = allResults.filter(r => {
+    if (f.student && r.studentName !== f.student) return false;
+    if (f.subject && r.subject !== f.subject) return false;
+    if (f.class && r.studentClass !== f.class) return false;
+    if (f.search && !(r.studentName || '').toLowerCase().includes(f.search.toLowerCase()) && !(r.subject || '').toLowerCase().includes(f.search.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  const total = filtered.length;
+  const avgPct = total ? Math.round(filtered.reduce((s, r) => s + (r.pct || 0), 0) / total) : 0;
+  const passed = filtered.filter(r => (r.pct || 0) >= 50).length;
+  const highest = total ? Math.max(...filtered.map(r => r.pct || 0)) : 0;
+
+  const filterActive = !!(f.student || f.subject || f.class || f.search);
+
+  return `
+    <div class="fade-in">
+      <div class="section-header">
+        <h2>Results</h2>
+        <div class="actions-bar">
+          <button class="btn btn-secondary" onclick="exportResultsCSV()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn btn-danger" onclick="openClearResults()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            Clear All Results
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-4 gap-4 mb-6">
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">Total Submissions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="stat-value">${avgPct}%</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/></svg></div>
+          <div class="stat-value">${highest}%</div>
+          <div class="stat-label">Highest Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="stat-value">${passed}/${total}</div>
+          <div class="stat-label">Passed (=50%)</div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="row">
+          <select class="form-select" onchange="state.resultFilter.student=this.value; render();">
+            <option value="">All Students</option>
+            ${students.map(s => `<option value="${esc(s)}" ${f.student === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}
+          </select>
+          <select class="form-select" onchange="state.resultFilter.subject=this.value; render();">
+            <option value="">All Subjects</option>
+            ${subjects.map(s => `<option value="${esc(s)}" ${f.subject === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}
+          </select>
+          <select class="form-select" onchange="state.resultFilter.class=this.value; render();">
+            <option value="">All Classes</option>
+            ${classes.map(c => `<option value="${esc(c)}" ${f.class === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}
+          </select>
+          <input class="form-input" placeholder="Search student or subject…" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.resultFilter.search=this.value; render();">
+          ${filterActive ? `<button class="btn btn-secondary" onclick="state.resultFilter={student:'',subject:'',class:'',search:''}; render();">Reset</button>` : ''}
+        </div>
+      </div>
+
+      <div class="card"><div class="table-wrap"><table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Student</th><th>Class</th><th>Type</th><th>Subject</th>
+            <th>Score</th><th>%</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.length === 0 ? `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">
+            ${allResults.length === 0 ? 'No results yet. Students will appear here when they complete quizzes.' : 'No results match your filter.'}
+          </td></tr>` :
+            filtered.map(r => `
+              <tr>
+                <td>${esc(r.date || '—')}</td>
+                <td><strong>${esc(r.studentName || 'Unknown')}</strong></td>
+                <td>${esc(r.studentClass || '—')}</td>
+                <td><span class="badge badge-primary">${esc(r.type || 'practice')}</span></td>
+                <td>${esc(r.subject || '—')}</td>
+                <td>${esc(r.score || '—')}</td>
+                <td><strong>${r.pct || 0}%</strong></td>
+                <td>
+                  <span class="badge ${r.pct >= 75 ? 'badge-success' : r.pct >= 50 ? 'badge-warning' : 'badge-danger'}">
+                    ${r.pct >= 75 ? 'Excellent' : r.pct >= 50 ? 'Pass' : 'Fail'}
+                  </span>
+                </td>
+              </tr>`).join('')}
+        </tbody>
+      </table></div></div>
+    </div>
+  `;
+}
+
+function exportResultsCSV() {
+  const list = DB.results || [];
+  if (list.length === 0) { toast('No results to export', ''); return; }
+  const headers = ['Date','Student','Class','Type','Subject','Score','Percent'];
+  const rows = list.map(r => [r.date, r.studentName, r.studentClass, r.type, r.subject, r.score, r.pct]);
+  const csv = [headers.join(','), ...rows.map(row => row.map(v => `"${(v == null ? '' : v)}"`).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mock-results-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Results exported', 'success');
+}
+window.exportResultsCSV = exportResultsCSV;
+
+function openClearResults() {
+  const total = (DB.results || []).length;
+  if (total === 0) { toast('No results to clear', ''); return; }
+  confirmDialog({
+    title: 'Delete ALL results?',
+    message: `You are about to delete <strong>${total}</strong> result${total === 1 ? '' : 's'} from the database.<br><br>This cannot be undone.`,
+    confirmLabel: `Delete All ${total}`,
+    cancelLabel: 'Cancel',
+    variant: 'danger',
+    onConfirm: async () => {
+      try {
+        const { db, ref, remove } = window.__fb;
+        await remove(ref(db, 'results'));
+        toast(`Cleared ${total} result${total === 1 ? '' : 's'}`, 'success');
+      } catch (e) { toast('Delete failed: ' + e.message, 'error'); }
+    }
+  });
+}
+window.openClearResults = openClearResults;
+
+/* IMPORT (Question Bank) */
+function openImportModal() {
+  openModal('Import Questions', `
+    <p style="margin-bottom:12px">Supported: <strong>CSV, XLSX, XLS, DOCX</strong></p>
+    <div class="drag" id="dragArea">
+      <p>Drag & drop your file here</p>
+      <p class="text-sm text-muted" style="font-weight:400;">or click to browse</p>
+      <input type="file" id="importFile" accept=".csv,.xlsx,.xls,.docx" style="display:none">
+    </div>
+  `, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: 'Preview & Import', class: 'btn-primary', onClick: handleImportFile }
+  ], true);
+  setTimeout(() => {
+    const area = document.getElementById('dragArea');
+    const input = document.getElementById('importFile');
+    if (!area || !input) return;
+    area.onclick = () => input.click();
+    ['dragenter','dragover'].forEach(ev => area.addEventListener(ev, e => { e.preventDefault(); area.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(ev => area.addEventListener(ev, e => { e.preventDefault(); area.classList.remove('dragover'); }));
+    area.addEventListener('drop', e => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) {
+        input.files = e.dataTransfer.files;
+        area.querySelector('p').textContent = e.dataTransfer.files[0].name;
+      }
+    });
+  }, 50);
+}
+async function handleImportFile() {
+  const fi = document.getElementById('importFile');
+  if (!fi.files[0]) return toast('Please select a file', 'error');
+  const file = fi.files[0];
+  const ext = file.name.split('.').pop().toLowerCase();
+  try {
+    let rows = [];
+    if (ext === 'csv') rows = await parseCSV(file);
+    else if (ext === 'xlsx' || ext === 'xls') rows = await parseXLSX(file);
+    else if (ext === 'docx') rows = await parseDOCX(file);
+    else return toast('Unsupported file type', 'error');
+    if (!rows.length) { toast('No questions found. Check console for details.', 'error'); return; }
+    showPreview(rows);
+  } catch (e) { console.error(e); toast('Read error: ' + e.message, 'error'); }
+}
+
+function parseCSV(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = e => {
+      const lines = e.target.result.split('\n').filter(l => l.trim());
+      if (lines.length < 2) return resolve([]);
+      const headers = splitCSV(lines[0]).map(h => h.replace(/^"|"$/g,'').trim());
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = splitCSV(lines[i]);
+        if (cols.length < 3) continue;
+        const row = {};
+        headers.forEach((h, idx) => row[h] = (cols[idx] || '').trim());
+        rows.push(row);
+      }
+      resolve(rows);
+    };
+    r.onerror = reject;
+    r.readAsText(file);
+  });
+}
+function splitCSV(line) {
+  const out = []; let cur = ''; let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { if (q && line[i+1] === '"') { cur += '"'; i++; } else q = !q; }
+    else if (c === ',' && !q) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+function parseXLSX(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = e => {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      resolve(XLSX.utils.sheet_to_json(ws, { defval: '' }));
+    };
+    r.onerror = reject;
+    r.readAsArrayBuffer(file);
+  });
+}
+async function parseDOCX(file) {
+  const buf = await file.arrayBuffer();
+  const zip = await JSZip.loadAsync(buf);
+  const media = {};
+  const mediaNames = [];
+  for (const name of Object.keys(zip.files)) {
+    if (name.startsWith('word/media/') && !zip.files[name].dir) {
+      try { media[name] = await zip.files[name].async('blob'); mediaNames.push(name); }
+      catch (e) { console.warn('[DOCX] media read fail', name, e); }
+    }
+  }
+  const relMap = {};
+  try {
+    const relsXml = await zip.files['word/_rels/document.xml.rels'].async('string');
+    const relRe = /<Relationship\b[^>]*\/?>/g;
+    let m;
+    while ((m = relRe.exec(relsXml))) {
+      const tag = m[0];
+      const idM = tag.match(/\bId="([^"]+)"/);
+      const targetM = tag.match(/\bTarget="([^"]+)"/);
+      if (!idM || !targetM) continue;
+      let target = targetM[1];
+      if (!target.includes('media/')) continue;
+      let clean = target.replace(/^\.\.\//, '').replace(/^\//, '');
+      if (!clean.startsWith('word/')) clean = 'word/' + clean;
+      if (media[clean]) relMap[idM[1]] = clean;
+    }
+  } catch (e) { console.warn('[DOCX] no rels file', e); }
+  const docXml = await zip.files['word/document.xml'].async('string');
+  const xml = new DOMParser().parseFromString(docXml, 'application/xml');
+  function byLocalName(root, name) {
+    const out = [];
+    const all = root.getElementsByTagName('*');
+    for (let i = 0; i < all.length; i++) {
+      const el = all[i];
+      if (el.localName === name || el.nodeName === name || el.nodeName.endsWith(':' + name)) out.push(el);
+    }
+    return out;
+  }
+  function getEmbedId(node) {
+    for (const a of node.attributes) {
+      const n = a.name || '', ln = a.localName || '';
+      if (ln === 'embed' || ln === 'id' || n === 'r:embed' || n === 'r:id' ||
+          n.endsWith(':embed') || n.endsWith(':id')) return a.value;
+    }
+    return null;
+  }
+  function extractCellImages(cell) {
+    const paths = [];
+    const candidates = [...byLocalName(cell, 'blip'), ...byLocalName(cell, 'imagedata')];
+    for (const c of candidates) {
+      const id = getEmbedId(c);
+      if (id && relMap[id] && media[relMap[id]]) paths.push(relMap[id]);
+    }
+    if (paths.length === 0) {
+      const all = cell.getElementsByTagName('*');
+      for (let i = 0; i < all.length; i++) {
+        const id = getEmbedId(all[i]);
+        if (id && relMap[id] && media[relMap[id]]) paths.push(relMap[id]);
+      }
+    }
+    return paths;
+  }
+  function extractCellText(cell) {
+    let text = '';
+    byLocalName(cell, 't').forEach(t => text += t.textContent);
+    return text.trim();
+  }
+  const tables = byLocalName(xml, 'tbl');
+  const rows = [];
+  for (let ti = 0; ti < tables.length; ti++) {
+    const trs = byLocalName(tables[ti], 'tr');
+    if (!trs.length) continue;
+    const firstCells = byLocalName(trs[0], 'tc').map(tc => extractCellText(tc).toLowerCase());
+    const hasHeader = firstCells.filter(c => ['subject','question','topic','option','correct'].some(k => c.includes(k))).length >= 2;
+    let colMap = null;
+    if (hasHeader) {
+      colMap = {};
+      firstCells.forEach((cell, idx) => {
+        const c = cell.replace(/\s+/g,' ').trim();
+        if (c.includes('subject')) colMap.subject = idx;
+        else if (c.includes('topic')) colMap.topic = idx;
+        else if (c.includes('question')) colMap.question = idx;
+        else if (c.includes('option a') || c === 'a') colMap.optionA = idx;
+        else if (c.includes('option b') || c === 'b') colMap.optionB = idx;
+        else if (c.includes('option c') || c === 'c') colMap.optionC = idx;
+        else if (c.includes('option d') || c === 'd') colMap.optionD = idx;
+        else if (c.includes('option e') || c === 'e') colMap.optionE = idx;
+        else if (c.includes('correct') || c === 'answer') colMap.correct = idx;
+        else if (c.includes('explanation')) colMap.explanation = idx;
+        else if (c.includes('year')) colMap.year = idx;
+        else if (c.includes('difficulty')) colMap.difficulty = idx;
+        else if (c.includes('image')) colMap.image = idx;
+      });
+    }
+    const startRow = hasHeader ? 1 : 0;
+    for (let ri = startRow; ri < trs.length; ri++) {
+      const tcs = byLocalName(trs[ri], 'tc');
+      if (tcs.length < 3) continue;
+      const cells = tcs.map(tc => ({ text: extractCellText(tc), images: extractCellImages(tc) }));
+      let row;
+      if (colMap && colMap.question != null) {
+        row = {
+          'Subject': cells[colMap.subject]?.text || '',
+          'Topic': cells[colMap.topic]?.text || '',
+          'Question Text': cells[colMap.question]?.text || '',
+          'Option A': cells[colMap.optionA]?.text || '',
+          'Option B': cells[colMap.optionB]?.text || '',
+          'Option C': cells[colMap.optionC]?.text || '',
+          'Option D': cells[colMap.optionD]?.text || '',
+          'Option E': cells[colMap.optionE]?.text || '',
+          'Correct Answer': cells[colMap.correct]?.text || '',
+          'Explanation': cells[colMap.explanation]?.text || '',
+          'Year': cells[colMap.year]?.text || '',
+          'Difficulty': cells[colMap.difficulty]?.text || '',
+          'Image URL': cells[colMap.image]?.text || '',
+          __imgQuestion: cells[colMap.question]?.images[0] || null,
+          __imgOptionA: cells[colMap.optionA]?.images[0] || null,
+          __imgOptionB: cells[colMap.optionB]?.images[0] || null,
+          __imgOptionC: cells[colMap.optionC]?.images[0] || null,
+          __imgOptionD: cells[colMap.optionD]?.images[0] || null,
+          __imgOptionE: cells[colMap.optionE]?.images[0] || null,
+          __imgExplanation: cells[colMap.explanation]?.images[0] || null,
+          __media: media
+        };
+      } else {
+        row = {
+          'Subject': cells[0]?.text || '',
+          'Topic': cells[1]?.text || '',
+          'Question Text': cells[2]?.text || '',
+          'Option A': cells[3]?.text || '',
+          'Option B': cells[4]?.text || '',
+          'Option C': cells[5]?.text || '',
+          'Option D': cells[6]?.text || '',
+          'Option E': cells[7]?.text || '',
+          'Correct Answer': cells[8]?.text || '',
+          'Explanation': cells[9]?.text || '',
+          'Year': cells[10]?.text || '',
+          'Difficulty': cells[11]?.text || '',
+          'Image URL': cells[12]?.text || '',
+          __imgQuestion: cells[2]?.images[0] || null,
+          __imgOptionA: cells[3]?.images[0] || null,
+          __imgOptionB: cells[4]?.images[0] || null,
+          __imgOptionC: cells[5]?.images[0] || null,
+          __imgOptionD: cells[6]?.images[0] || null,
+          __imgOptionE: cells[7]?.images[0] || null,
+          __imgExplanation: cells[9]?.images[0] || null,
+          __media: media
+        };
+      }
+      if (row['Question Text']) rows.push(row);
+    }
+  }
+  return rows;
+}
+function normalizeCorrect(raw) {
+  if (!raw) return 'A';
+  const s = String(raw).trim().toUpperCase();
+  if (['A','B','C','D','E'].includes(s)) return s;
+  if (['TRUE','T','YES','Y','1','CORRECT'].includes(s)) return 'A';
+  if (['FALSE','F','NO','N','0','INCORRECT'].includes(s)) return 'B';
+  return 'A';
+}
+
+function showPreview(rows) {
+  const questions = rows.map(r => {
+    const get = k => (r[k] || '').toString();
+    const correctRaw = get('Correct Answer') || get('correct') || '';
+    const options = [];
+    const optionImages = [];
+    ['A','B','C','D','E'].forEach(l => {
+      const v = get('Option ' + l);
+      if (v) {
+        options.push(`${l}) ${v}`);
+        optionImages.push(r['__imgOption' + l] || null);
+      }
+    });
+    return {
+      subject: get('Subject') || 'General',
+      topic: get('Topic') || 'General',
+      text: get('Question Text') || '',
+      options: options,
+      optionImages: optionImages,
+      correct: normalizeCorrect(correctRaw),
+      explanation: get('Explanation') || '',
+      year: get('Year') || '',
+      difficulty: get('Difficulty') || 'Medium',
+      imageUrl: get('Image URL') || '',
+      __imgQuestion: r.__imgQuestion || null,
+      __imgExplanation: r.__imgExplanation || null,
+      __media: r.__media || null
+    };
+  }).filter(q => q.text);
+
+  const html = `
+    <p style="margin-bottom:12px;font-size:var(--text-sm);color:var(--text-muted)">Found <strong>${questions.length}</strong> question(s).</p>
+    <div style="max-height:400px;overflow:auto;border:1px solid var(--border);border-radius:var(--radius)">
+      <table class="preview-table">
+        <thead><tr><th>#</th><th>Q-Img</th><th>Opts</th><th>Subject</th><th>Question</th><th>Correct</th></tr></thead>
+        <tbody>
+          ${questions.map((q,i) => {
+            const hasQ = q.__imgQuestion && q.__media && q.__media[q.__imgQuestion];
+            return `
+              <tr>
+                <td>${i+1}</td>
+                <td>${hasQ ? `<img data-idx="${i}" class="prev-img">` : '—'}</td>
+                <td>${q.options.length}</td>
+                <td>${esc(q.subject)}</td>
+                <td style="max-width:220px">${esc(q.text)}</td>
+                <td><strong>${esc(q.correct)}</strong></td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div id="importProgress" class="hidden" style="margin-top:16px">
+      <p id="importLabel" class="text-sm text-muted">Importing…</p>
+      <div class="progress"><div class="progress-bar" id="importFill" style="width:0%"></div></div>
+      <p id="importPct" class="text-xs text-muted" style="margin-top:4px">0%</p>
+    </div>
+  `;
+  openModal('Preview Import', html, [
+    { label: 'Cancel', class: 'btn-secondary', onClick: closeModal },
+    { label: 'Import All', class: 'btn-primary', onClick: () => confirmImport(questions) }
+  ], true);
+
+  setTimeout(() => {
+    document.querySelectorAll('.prev-img').forEach(img => {
+      const i = parseInt(img.dataset.idx);
+      const q = questions[i];
+      if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion])
+        img.src = URL.createObjectURL(q.__media[q.__imgQuestion]);
+    });
+  }, 50);
+}
+
+async function confirmImport(questions) {
+  const wrap = document.getElementById('importProgress');
+  const fill = document.getElementById('importFill');
+  const pct = document.getElementById('importPct');
+  const label = document.getElementById('importLabel');
+  if (wrap) wrap.classList.remove('hidden');
+  document.querySelectorAll('#modalFoot button').forEach(b => b.disabled = true);
+
+  let imported = 0, imgOk = 0, imgFail = 0;
+  for (let i = 0; i < questions.length; i++) {
+    const q = questions[i];
+    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}…`;
+
+    let mainImage = null;
+    if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion]) {
+      try { mainImage = await uploadToCloudinary(q.__media[q.__imgQuestion]); imgOk++; } catch (e) { imgFail++; }
+    }
+    const optionImages = [];
+    for (let o = 0; o < q.options.length; o++) {
+      const imgPath = q.optionImages && q.optionImages[o] ? q.optionImages[o] : null;
+      if (imgPath && q.__media && q.__media[imgPath]) {
+        try { optionImages.push(await uploadToCloudinary(q.__media[imgPath])); imgOk++; } catch (e) { optionImages.push(null); imgFail++; }
+      } else {
+        optionImages.push(null);
+      }
+    }
+    let explanationImage = null;
+    if (q.__imgExplanation && q.__media && q.__media[q.__imgExplanation]) {
+      try { explanationImage = await uploadToCloudinary(q.__media[q.__imgExplanation]); imgOk++; } catch (e) { imgFail++; }
+    }
+    const data = {
+      text: q.text, subject: q.subject, topic: q.topic,
+      difficulty: q.difficulty, correct: q.correct, year: q.year,
+      options: q.options, optionImages, explanation: q.explanation,
+      explanationImage, image: mainImage
+    };
+    try { await dbPush('questions', data); imported++; } catch (e) {}
+
+    const p = Math.round(((i+1)/questions.length)*100);
+    if (fill) fill.style.width = p + '%';
+    if (pct) pct.textContent = p + '%';
+  }
+  if (label) label.textContent = `Done! Imported ${imported}.`;
+  setTimeout(() => {
+    closeModal();
+    toast(`Imported ${imported} question(s).`, 'success');
+  }, 700);
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* NOTIFICATIONS */
+function computeNotifications() {
+  const notifs = [];
+
+  const recentResults = (DB.results || [])
+    .filter(r => r.createdAt)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .slice(0, 8);
+
+  recentResults.forEach(r => {
+    const pct = r.pct || 0;
+    let iconClass = '';
+    if (pct >= 75) iconClass = '';
+    else if (pct >= 50) iconClass = 'warning';
+    else iconClass = 'danger';
+    notifs.push({
+      id: 'res_' + (r.id || r.createdAt),
+      title: `${r.studentName || 'Student'} scored ${pct}%`,
+      text: `${r.subject || 'Quiz'} • ${r.score || ''}`,
+      time: r.createdAt,
+      iconClass,
+      icon: pct >= 50
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+    });
+  });
+
+  const recentQs = DB.questions
+    .filter(q => q.createdAt)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .slice(0, 3);
+
+  recentQs.forEach(q => {
+    notifs.push({
+      id: 'q_' + q.id,
+      title: 'New question added',
+      text: `${q.subject || 'General'} • ${(q.text || '').slice(0, 50)}…`,
+      time: q.createdAt,
+      iconClass: '',
+      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+    });
+  });
+
+  const recentMocks = DB.mocks
+    .filter(m => m.updatedAt || m.createdAt)
+    .sort((a, b) => ((b.updatedAt || b.createdAt) || 0) - ((a.updatedAt || a.createdAt) || 0))
+    .slice(0, 2);
+
+  recentMocks.forEach(m => {
+    notifs.push({
+      id: 'mock_' + m.id,
+      title: `Quiz ${m.status === 'published' ? 'published' : 'updated'}`,
+      text: `${m.title} • ${m.questions || 0} questions`,
+      time: m.updatedAt || m.createdAt,
+      iconClass: 'warning',
+      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>`
+    });
+  });
+
+  notifs.sort((a, b) => (b.time || 0) - (a.time || 0));
+  return notifs.slice(0, 15);
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'Just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function renderNotifications() {
+  const list = computeNotifications();
+  state.notifications = list;
+  const container = document.getElementById('notifList');
+  const dot = document.getElementById('notifDot');
+  if (!container) return;
+
+  const unread = list.length > 0 && !state.notificationsRead;
+  if (dot) dot.style.display = unread ? 'block' : 'none';
+
+  if (list.length === 0) {
+    container.innerHTML = `<div class="notif-empty">No notifications yet</div>`;
+    return;
+  }
+  container.innerHTML = list.map(n => `
+    <div class="notif-item ${unread ? 'unread' : ''}">
+      <div class="notif-icon ${n.iconClass || ''}">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.title)}</div>
+        <div class="notif-text">${esc(n.text)}</div>
+        <div class="notif-time">${timeAgo(n.time)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setupNotifications() {
+  const btn = document.getElementById('notifBtn');
+  const dropdown = document.getElementById('notifDropdown');
+  const markRead = document.getElementById('notifMarkRead');
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('open');
+    if (dropdown.classList.contains('open')) {
+      renderNotifications();
+    }
+  });
+
+  markRead.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.notificationsRead = true;
+    document.getElementById('notifDot').style.display = 'none';
+    document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread'));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
+}
+
+const _originalRender = render;
+render = function() {
+  _originalRender();
+  renderNotifications();
+};
+window.render = render;
+
+/* Reads /jamb_questions and normalizes field names to Admin format */
+function listenJambQuestions() {
+  const { db, ref, onValue } = window.__fb;
+  onValue(ref(db, 'jamb_questions'), snap => {
+    const val = snap.val() || {};
+    DB.questions = Object.entries(val).map(([id, raw]) => {
+      // Build options array
+      const opts = [];
+      const optImgs = [];
+      ['a','b','c','d','e'].forEach(l => {
+        const v = raw['option_' + l];
+        if (v && String(v).trim()) {
+          opts.push(l.toUpperCase() + ') ' + String(v).trim());
+          optImgs.push(null);
+        }
+      });
+      // Subject title-case
+      const subjRaw = String(raw.subject || 'General').trim();
+      const subj = subjRaw.length <= 3 ? subjRaw.toUpperCase() : subjRaw.replace(/\b\w/g, c => c.toUpperCase());
+      return {
+        id,
+        text: raw.question || raw.text || '',
+        subject: subj,
+        topic: raw.topic || '',
+        year: String(raw.year || raw.examyear || ''),
+        difficulty: raw.difficulty || 'Medium',
+        correct: String(raw.answer || raw.correct || 'A').trim().toUpperCase(),
+        options: opts,
+        optionImages: optImgs,
+        explanation: raw.explanation || raw.solution || '',
+        image: raw.image_url || raw.image || null,
+        explanationImage: raw.explanation_image_url || null,
+        exam_type: raw.exam_type || 'JAMB'
+      };
+    });
+    console.log('[Admin] Loaded ' + DB.questions.length + ' JAMB questions');
+    render();
+  }, err => { console.error('DB read error on jamb_questions', err); });
+}
+
+/* =========================================================
+   AI TOPIC DETECTION (runs in browser — fast & reliable)
+   ========================================================= */
+const GEMINI_API_KEY = "AQ.Ab8RN6IsstXQdxQLpIsGvL9EBbBdYAJN1GulgG2CMFEoyhZGvQ"; // <-- CHANGE THIS
+
+async function askGeminiForTopic(questionText, subject, optionsText) {
+  const prompt = "You are a JAMB syllabus expert. Classify this " + subject.toUpperCase() + " question into the correct JAMB syllabus topic. Reply with ONLY the topic name (2 to 5 words). Do NOT write any explanation. Do NOT write any sentence. Do NOT include the word 'Topic:'. Base the topic on the official JAMB syllabus.\n\nQuestion: " + questionText + "\nOptions: " + optionsText + "\n\nTopic:";
+
+  try {
+    // Using Puter.js - completely free, no API key needed
+    const response = await puter.ai.chat(prompt, {
+      model: 'gpt-4o-mini' // Fast and reliable
+    });
+
+    let topic = response.trim();
+    topic = topic.replace(/Topic:/gi, '').trim();
+    topic = topic.split('\n')[0].trim();
+    topic = topic.replace(/^["']|["']$/g, '').trim();
+    if (topic.length > 60) topic = topic.substring(0, 60).trim();
+    return topic || null;
+  } catch (e) {
+    console.warn('Puter AI error: ' + e.message);
+    return null;
+  }
+}
+async function autoDetectAllTopicsWithAI() {
+   
+
+  const missing = DB.questions.filter(q => !q.topic || q.topic.trim() === '' || q.topic === 'General');
+  if (missing.length === 0) {
+    toast('All questions already have topics', '');
+    return;
+  }
+
+  confirmDialog({
+    title: 'Auto-detect topics for ' + missing.length + ' questions?',
+    message: 'The AI will classify each question into a JAMB syllabus topic. This runs in your browser and will take about ' + Math.ceil(missing.length / 5) + ' minutes.<br><br>You can leave this tab open — do not close it.',
+    confirmLabel: 'Start (' + missing.length + ')',
+    variant: 'warning',
+    onConfirm: async () => {
+      closeModal();
+      toast('Starting AI topic detection for ' + missing.length + ' questions...');
+
+      let updated = 0;
+      let failed = 0;
+      const total = missing.length;
+
+      // Process 5 at a time (parallel) to be fast
+      const BATCH_SIZE = 1;
+
+      for (let i = 0; i < total; i += BATCH_SIZE) {
+        const batch = missing.slice(i, i + BATCH_SIZE);
+
+        await Promise.all(batch.map(async (q) => {
+          const opts = ['a','b','c','d','e'].map(l => q['option_' + l] || q['option_' + l.toUpperCase()] || '').filter(Boolean).join(' | ').substring(0, 300);
+          const topic = await askGeminiForTopic(q.text || q.question || '', q.subject || 'general', opts);
+
+          if (topic) {
+            try {
+              const { db, ref, update } = window.__fb;
+              await update(ref(db, 'jamb_questions/' + q.id), { topic: topic });
+              updated++;
+              console.log('[' + (updated + failed) + '/' + total + '] ' + q.subject + ' -> ' + topic);
+            } catch (e) {
+              failed++;
+              console.warn('DB write failed: ' + e.message);
+            }
+          } else {
+            failed++;
+          }
+        }));
+
+        toast('Progress: ' + Math.min(i + BATCH_SIZE, total) + ' / ' + total + '  (' + updated + ' done, ' + failed + ' failed)');
+
+        // Small pause between batches to be polite to the API
+        await new Promise(r => setTimeout(r, 4500));
+      }
+
+      toast('Done! ' + updated + ' topics added, ' + failed + ' failed.', 'success');
+    }
+  });
+}
+window.autoDetectAllTopicsWithAI = autoDetectAllTopicsWithAI;
+
+/* BOOT */
+window.__bootApp = function () {
+  if (booted) return;
+  booted = true;
+  setupNotifications();
+  listen('students', 'students');
+  listen('subjects', 'subjects');
+  listenJambQuestions();
+  listen('mocks', 'mocks');
+  listen('results', 'results');
+};
+
+window.state = state;
+</script>
+</body>
+</html>
