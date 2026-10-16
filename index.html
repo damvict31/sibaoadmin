@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SIBAO CBT APP ó Admin Portal</title>
+<title>SIBAO CBT APP ‚Äî Admin Portal</title>
+<link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/t3tg9lfb/image/upload/v1783515403/1000374024_11zon-256x256_ivfvnp.png">
+
 <style>
 :root {
   --primary: #0E5A38;
@@ -548,7 +550,7 @@ tbody tr:last-child td { border-bottom: none; }
   .auth-card { padding: 28px 20px 24px; max-width: 100%; }
 }
 
-/* ===== NEW: multi-subject picker ===== */
+/* ===== multi-subject picker ===== */
 .subject-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; min-height: 54px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); }
 .subject-chips.empty { justify-content: flex-start; align-items: center; }
 .subject-chips .empty-text { color: var(--text-muted); font-size: var(--text-sm); }
@@ -579,7 +581,7 @@ tbody tr:last-child td { border-bottom: none; }
 .subject-tile .st-count { font-size: 10px; color: var(--text-muted); }
 .subject-tile .st-check { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; flex-shrink: 0; }
 .subject-tile.selected .st-check { border-color: var(--primary); background: var(--primary); color: white; }
-.subject-tile.selected .st-check::before { content: "?"; }
+.subject-tile.selected .st-check::before { content: "‚úì"; }
 </style>
 </head>
 <body>
@@ -591,7 +593,7 @@ tbody tr:last-child td { border-bottom: none; }
     <div class="auth-left-content">
       <img class="auth-logo-big" src="https://res.cloudinary.com/t3tg9lfb/image/upload/v1783515403/1000374024_11zon-256x256_ivfvnp.png" alt="SIBAO Logo">
       <div class="auth-left-headline">Welcome to SIBAO CBT Admin</div>
-      <div class="auth-left-sub">Faith, Knowledge &amp; Service ó Manage your students, questions and quizzes.</div>
+      <div class="auth-left-sub">Faith, Knowledge &amp; Service ‚Äî Manage your students, questions and quizzes.</div>
     </div>
     <div class="auth-left-footer">@2026</div>
   </div>
@@ -619,11 +621,11 @@ tbody tr:last-child td { border-bottom: none; }
         <div class="auth-forgot"><a onclick="alert('Contact the ICT Unit to reset your password.')">Forgot Password?</a></div>
         <div class="auth-error" id="loginError"></div>
         <button type="submit" class="auth-btn" id="loginSubmitBtn">LOGIN</button>
-        <div class="auth-help">Need help? Contact <strong>ICT Unit</strong> ó 0803 456 7890</div>
+        <div class="auth-help">Need help? Contact <strong>ICT Unit</strong> ‚Äî 0803 456 7890</div>
       </form>
     </div>
     <div class="auth-footer">
-      <span class="footer-line">© 2026 Smith International Baptist Academy, Ogbomoso. All Rights Reserved.</span>
+      <span class="footer-line">¬© 2026 Smith International Baptist Academy, Ogbomoso. All Rights Reserved.</span>
       <span class="footer-line">Powered by <span class="footer-brand">IMPACT ROBOTICS LAB</span></span>
     </div>
   </div>
@@ -706,7 +708,7 @@ tbody tr:last-child td { border-bottom: none; }
       </div>
     </header>
     <div class="page-content" id="content">
-      <div class="loader"><div class="spinner"></div> LoadingÖ</div>
+      <div class="loader"><div class="spinner"></div> Loading‚Ä¶</div>
     </div>
   </main>
 </div>
@@ -744,7 +746,7 @@ function togglePassword() {
 }
 window.togglePassword = togglePassword;
 </script>
-<script src="https://js.puter.com/v2/"></script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -897,7 +899,8 @@ const state = {
   resultFilter: { student: '', subject: '', class: '', search: '' },
   mockBuilder: { selectedQuestions: [], editId: null, selectedSubjects: [] },
   notifications: [],
-  notificationsRead: false
+  notificationsRead: false,
+  notificationsReadAt: 0
 };
 
 function listen(path, key) {
@@ -945,6 +948,12 @@ function adminNav(view) {
     document.getElementById('sidebar').classList.remove('open');
     return;
   }
+  
+  if (view !== 'createMock' && currentView === 'createMock') {
+    // Leaving the quiz builder ‚Äî reset it so Edit starts clean
+    state.mockBuilder = { selectedQuestions: [], editId: null, selectedSubjects: [] };
+  }
+
   currentView = view;
   document.querySelectorAll('.sidebar-nav-item').forEach(b => {
     b.classList.toggle('active', b.dataset.nav === view);
@@ -985,7 +994,7 @@ function viewDashboard() {
     <div class="fade-in">
       <div class="dash-banner">
         <h2>SIBAO CBT Admin Panel</h2>
-        <p>Manage students, subjects, questions, and quizzes ó all in one place.</p>
+        <p>Manage students, subjects, questions, and quizzes ‚Äî all in one place.</p>
       </div>
       <div class="grid grid-4 gap-4 mb-6">
         <div class="stat-card">
@@ -1020,9 +1029,9 @@ function viewDashboard() {
                 ${DB.questions.length === 0 ? `<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--text-muted)">No questions yet.</td></tr>` :
                   DB.questions.slice(0, 5).map(q => `
                     <tr>
-                      <td style="max-width:340px">${esc((q.text||'').slice(0, 100))}${(q.text||'').length > 100 ? 'Ö' : ''}</td>
-                      <td>${esc(q.subject || 'ó')}</td>
-                      <td>${esc(q.year || 'ó')}</td>
+                      <td style="max-width:340px">${esc((q.text||'').slice(0, 100))}${(q.text||'').length > 100 ? '‚Ä¶' : ''}</td>
+                      <td>${esc(q.subject || '‚Äî')}</td>
+                      <td>${esc(q.year || '‚Äî')}</td>
                     </tr>`).join('')}
               </tbody>
             </table>
@@ -1070,7 +1079,7 @@ function viewSubjects() {
                   return `
                     <tr>
                       <td><strong>${esc(s.name)}</strong></td>
-                      <td>${esc(s.code || 'ó')}</td>
+                      <td>${esc(s.code || '‚Äî')}</td>
                       <td>${qCount}</td>
                       <td><span class="badge ${s.status === 'inactive' ? 'badge-danger' : 'badge-success'}">${s.status || 'active'}</span></td>
                       <td>
@@ -1155,8 +1164,8 @@ function viewStudents() {
               <tr>
                 <td><strong>${esc(s.name)}</strong></td>
                 <td>${esc(s.username)}</td>
-                <td>${esc(s.class || 'ó')}</td>
-                <td>${esc(s.subjects || 'ó')}</td>
+                <td>${esc(s.class || '‚Äî')}</td>
+                <td>${esc(s.subjects || '‚Äî')}</td>
                 <td><span class="badge ${s.status === 'inactive' ? 'badge-danger' : 'badge-success'}">${s.status || 'active'}</span></td>
                 <td>
                   <div class="action-buttons">
@@ -1247,12 +1256,10 @@ function viewQuestions() {
       <div class="section-header">
         <h2>Question Bank</h2>
         <div class="actions-bar">
-
-<button class="btn btn-primary" onclick="autoDetectAllTopicsWithAI()">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-  AI Topic Detection
-</button>
-
+          <button class="btn btn-primary" onclick="autoDetectAllTopicsWithAI()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            AI Topic Detection
+          </button>
           <button class="btn btn-danger" onclick="openMasterDelete()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
             Delete All
@@ -1288,7 +1295,7 @@ function viewQuestions() {
             <option value="">All Years</option>
             ${years.map(y => `<option value="${esc(y)}" ${f.year === y ? 'selected' : ''}>${esc(y)}</option>`).join('')}
           </select>
-          <input class="form-input" placeholder="Search question textÖ" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.questionFilter.search=this.value; render();">
+          <input class="form-input" placeholder="Search question text‚Ä¶" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.questionFilter.search=this.value; render();">
           ${filterActive ? `<button class="btn btn-secondary" onclick="state.questionFilter={subject:'',topic:'',difficulty:'',year:'',search:''}; render();">Reset</button>` : ''}
           ${filterActive && filtered.length > 0 ? `<button class="btn btn-danger" onclick="openDeleteFiltered()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
@@ -1309,11 +1316,11 @@ function viewQuestions() {
                     : '<span style="color:var(--text-muted);font-size:10px">none</span>'}
                 </td>
                 <td style="max-width:280px">${esc(q.text)}</td>
-                <td>${esc(q.subject || 'ó')}</td>
-                <td>${esc(q.topic || 'ó')}</td>
-                <td>${esc(q.year || 'ó')}</td>
-                <td><span class="badge ${q.difficulty==='Easy'?'badge-success':q.difficulty==='Hard'?'badge-danger':'badge-warning'}">${esc(q.difficulty || 'ó')}</span></td>
-                <td><strong>${esc(q.correct || 'ó')}</strong></td>
+                <td>${esc(q.subject || '‚Äî')}</td>
+                <td>${esc(q.topic || '‚Äî')}</td>
+                <td>${esc(q.year || '‚Äî')}</td>
+                <td><span class="badge ${q.difficulty==='Easy'?'badge-success':q.difficulty==='Hard'?'badge-danger':'badge-warning'}">${esc(q.difficulty || '‚Äî')}</span></td>
+                <td><strong>${esc(q.correct || '‚Äî')}</strong></td>
                 <td>${(q.options || []).length}</td>
                 <td>
                   <div class="action-buttons">
@@ -1340,14 +1347,16 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E'];
 
 function openQuestionForm(existing) {
   const isEdit = !!existing;
-  const opts = existing?.options || [];
-  const optImgs = existing?.optionImages || [];
-  const subjOpts = DB.subjects.length ? DB.subjects : [{name:'English Language'},{name:'Mathematics'},{name:'Biology'},{name:'Physics'},{name:'Chemistry'}];
+    const opts = existing?.options || [];
+  const optImgsByLetter = existing?.optionImages || {};
+  const subjOpts = DB.subjects.length ? DB.subjects : [
+    {name:'English Language'},{name:'Mathematics'},{name:'Biology'},{name:'Physics'},{name:'Chemistry'}
+  ];
 
-  const optionRows = OPTION_LETTERS.map((letter, i) => {
+    const optionRows = OPTION_LETTERS.map((letter, i) => {
     const raw = opts[i] || '';
     const value = raw.replace(/^[A-E]\)\s*/, '');
-    const imgUrl = optImgs[i] || '';
+    const imgUrl = (optImgsByLetter && optImgsByLetter[letter]) || '';
     const hasImg = !!imgUrl;
     return `
       <div class="option-row">
@@ -1366,7 +1375,9 @@ function openQuestionForm(existing) {
       </div>`;
   }).join('');
 
-  const explImg = existing?.explanationImage || '';
+  const explImg = existing?.explanationImage || existing?.explanation_image_url || '';
+  const mainImg = existing?.image || existing?.image_url || '';
+
   const explBlock = `
     <div class="form-group">
       <label class="form-label">Explanation Image (optional)</label>
@@ -1375,8 +1386,8 @@ function openQuestionForm(existing) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         <span>Choose image for explanation</span>
       </label>
-      ${explImg ? `<img id="explImgPreview" class="expl-img-preview" src="${esc(explImg)}" alt="explanation">` : `<img id="explImgPreview" class="expl-img-preview hidden">`}
-      ${explImg ? `<button type="button" class="btn btn-secondary btn-sm" style="margin-top:6px;" onclick="removeExplImage()">Remove image</button>` : ''}
+      <img id="explImgPreview" class="expl-img-preview ${explImg ? '' : 'hidden'}" src="${esc(explImg)}" alt="explanation">
+      <button type="button" id="explImgRemoveBtn" class="btn btn-secondary btn-sm ${explImg ? '' : 'hidden'}" style="margin-top:6px;" onclick="removeExplImage()">Remove image</button>
     </div>`;
 
   openModal(isEdit ? 'Edit Question' : 'Add Question', `
@@ -1385,8 +1396,8 @@ function openQuestionForm(existing) {
     <div class="form-group">
       <label class="form-label">Question Image (optional)</label>
       <input type="file" id="qImage" accept="image/*" onchange="handleQImageUpload(this)">
-      <img id="qImgPrev" class="img-prev ${existing?.image ? '' : 'hidden'}" src="${esc(existing?.image || '')}" onerror="this.classList.add('hidden')">
-      ${existing?.image ? `<button type="button" class="btn btn-secondary btn-sm" style="margin-top:6px;" onclick="removeQImage()">Remove image</button>` : ''}
+      <img id="qImgPrev" class="img-prev ${mainImg ? '' : 'hidden'}" src="${esc(mainImg)}" onerror="this.classList.add('hidden')">
+      <button type="button" id="qImgRemoveBtn" class="btn btn-secondary btn-sm ${mainImg ? '' : 'hidden'}" style="margin-top:6px;" onclick="removeQImage()">Remove image</button>
     </div>
 
     <div class="grid grid-2">
@@ -1410,7 +1421,7 @@ function openQuestionForm(existing) {
     </div>
 
     <div class="form-group">
-      <label class="form-label">Options (AñE ó leave blank if not used)</label>
+      <label class="form-label">Options (A‚ÄìE ‚Äî leave blank if not used)</label>
       ${optionRows}
     </div>
 
@@ -1425,10 +1436,16 @@ function openQuestionForm(existing) {
     { label: isEdit ? 'Save Changes' : 'Create Question', class: 'btn-primary', onClick: () => saveQuestion(existing?.id) }
   ], true);
 
-  window.__qFormState = {
-    mainImage: existing?.image || null,
-    optionImages: [...optImgs],
-    explanationImage: existing?.explanationImage || null
+   window.__qFormState = {
+    mainImage: mainImg || null,
+    optionImages: {
+      A: (optImgsByLetter && optImgsByLetter.A) || null,
+      B: (optImgsByLetter && optImgsByLetter.B) || null,
+      C: (optImgsByLetter && optImgsByLetter.C) || null,
+      D: (optImgsByLetter && optImgsByLetter.D) || null,
+      E: (optImgsByLetter && optImgsByLetter.E) || null
+    },
+    explanationImage: explImg || null
   };
 }
 
@@ -1437,11 +1454,13 @@ function handleQImageUpload(input) {
   const preview = document.getElementById('qImgPrev');
   preview.src = URL.createObjectURL(f);
   preview.classList.remove('hidden');
+  document.getElementById('qImgRemoveBtn')?.classList.remove('hidden');
   window.__qFormState._mainFile = f;
 }
 function removeQImage() {
   const p = document.getElementById('qImgPrev');
   if (p) { p.src = ''; p.classList.add('hidden'); }
+  document.getElementById('qImgRemoveBtn')?.classList.add('hidden');
   window.__qFormState.mainImage = null;
   window.__qFormState._mainFile = null;
   const inp = document.getElementById('qImage');
@@ -1452,15 +1471,16 @@ function handleOptionImageUpload(input, letter) {
   const label = input.closest('.opt-img-btn');
   label.classList.add('has-image');
   label.innerHTML = `<input type="file" accept="image/*" onchange="handleOptionImageUpload(this, '${letter}')"><img class="preview-inside" id="optPreview${letter}" src="${URL.createObjectURL(f)}" alt="${letter}">`;
-  const idx = OPTION_LETTERS.indexOf(letter);
   if (!window.__qFormState._optionFiles) window.__qFormState._optionFiles = {};
-  window.__qFormState._optionFiles[idx] = f;
+  window.__qFormState._optionFiles[letter] = f;
 }
 function removeOptionImage(letter) {
-  const idx = OPTION_LETTERS.indexOf(letter);
-  window.__qFormState.optionImages[idx] = null;
-  if (window.__qFormState._optionFiles) delete window.__qFormState._optionFiles[idx];
-  const label = document.querySelector(`#qOpt${letter}`).parentElement.querySelector('.opt-img-btn');
+  window.__qFormState.optionImages[letter] = null;
+  if (window.__qFormState._optionFiles) delete window.__qFormState._optionFiles[letter];
+  const input = document.getElementById('qOpt' + letter);
+  if (!input) return;
+  const label = input.parentElement.querySelector('.opt-img-btn');
+  if (!label) return;
   label.classList.remove('has-image');
   label.innerHTML = `<input type="file" accept="image/*" onchange="handleOptionImageUpload(this, '${letter}')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -1471,19 +1491,28 @@ function handleExplImageUpload(input) {
   const preview = document.getElementById('explImgPreview');
   preview.src = URL.createObjectURL(f);
   preview.classList.remove('hidden');
+  document.getElementById('explImgRemoveBtn')?.classList.remove('hidden');
   window.__qFormState._explFile = f;
 }
 function removeExplImage() {
   const p = document.getElementById('explImgPreview');
   if (p) { p.src = ''; p.classList.add('hidden'); }
+  document.getElementById('explImgRemoveBtn')?.classList.add('hidden');
   window.__qFormState.explanationImage = null;
   window.__qFormState._explFile = null;
 }
+window.handleQImageUpload = handleQImageUpload;
+window.removeQImage = removeQImage;
+window.handleOptionImageUpload = handleOptionImageUpload;
+window.removeOptionImage = removeOptionImage;
+window.handleExplImageUpload = handleExplImageUpload;
+window.removeExplImage = removeExplImage;
+
 async function saveQuestion(existingId) {
   const text = document.getElementById('qText').value.trim();
   if (!text) return toast('Question text required', 'error');
   const st = window.__qFormState || { mainImage: null, optionImages: [], explanationImage: null };
-  toast('SavingÖ');
+  toast('Saving‚Ä¶');
 
   let mainImage = st.mainImage;
   if (st._mainFile) {
@@ -1491,19 +1520,19 @@ async function saveQuestion(existingId) {
     catch (e) { toast('Main image upload failed: ' + e.message, 'error'); return; }
   }
 
-  const options = [];
-  const optionImages = [];
+  // Collect options A‚ÄìE into JAMB-style fields
+  const optionTexts = {};
+  const optionImages = [null, null, null, null, null];
   for (let i = 0; i < OPTION_LETTERS.length; i++) {
     const letter = OPTION_LETTERS[i];
     const v = (document.getElementById('qOpt' + letter).value || '').trim();
-    if (!v) continue;
-    options.push(`${letter}) ${v}`);
-    let imgUrl = st.optionImages[i] || null;
-    if (st._optionFiles && st._optionFiles[i]) {
-      try { imgUrl = await uploadToCloudinary(st._optionFiles[i]); }
+    optionTexts['option_' + letter.toLowerCase()] = v || '';
+    let imgUrl = (st.optionImages && st.optionImages[letter]) || null;
+    if (st._optionFiles && st._optionFiles[letter]) {
+      try { imgUrl = await uploadToCloudinary(st._optionFiles[letter]); }
       catch (e) { toast(`Option ${letter} image failed: ` + e.message, 'error'); }
     }
-    optionImages.push(imgUrl);
+    optionImages[i] = imgUrl;
   }
 
   let explanationImage = st.explanationImage;
@@ -1513,51 +1542,56 @@ async function saveQuestion(existingId) {
   }
 
   const data = {
-    text,
+    question: text,
     subject: document.getElementById('qSubject').value,
     topic: document.getElementById('qTopic').value.trim(),
     difficulty: document.getElementById('qDifficulty').value,
-    correct: document.getElementById('qCorrect').value,
+    answer: document.getElementById('qCorrect').value,
     year: document.getElementById('qYear').value.trim(),
-    options: options,
     explanation: document.getElementById('qExplanation').value.trim(),
-    image: mainImage,
-    optionImages: optionImages,
-    explanationImage: explanationImage
+    image_url: mainImage || null,
+    option_images: optionImages,
+    explanation_image_url: explanationImage || null,
+    exam_type: 'JAMB',
+    updatedAt: Date.now()
   };
+  Object.assign(data, optionTexts);
 
   try {
-    if (existingId) await dbUpdate('questions', existingId, data);
-    else await dbPush('questions', data);
+    const { db, ref, update, push, set } = window.__fb;
+    if (existingId) {
+      await update(ref(db, 'jamb_questions/' + existingId), data);
+    } else {
+      const r = push(ref(db, 'jamb_questions'));
+      await set(r, { ...data, createdAt: Date.now() });
+    }
     window.__qFormState = null;
     closeModal();
     toast(existingId ? 'Updated' : 'Created', 'success');
   } catch (e) { toast(e.message, 'error'); }
 }
+
 async function editQuestion(id) { const q = DB.questions.find(x => x.id === id); if (q) openQuestionForm(q); }
 async function deleteQuestion(id) {
   const q = DB.questions.find(x => x.id === id);
   if (!q) return;
-  const preview = (q.text || '').slice(0, 80) + ((q.text || '').length > 80 ? 'Ö' : '');
+  const preview = (q.text || '').slice(0, 80) + ((q.text || '').length > 80 ? '‚Ä¶' : '');
   confirmDialog({
     title: 'Delete this question?',
     message: `<strong>"${esc(preview)}"</strong><br><br>This action cannot be undone.`,
     confirmLabel: 'Delete',
     variant: 'danger',
     onConfirm: async () => {
-      try { await dbRemove('questions', id); toast('Deleted', 'success'); }
-      catch (e) { toast(e.message, 'error'); }
+      try {
+        const { db, ref, remove } = window.__fb;
+        await remove(ref(db, 'jamb_questions/' + id));
+        toast('Deleted', 'success');
+      } catch (e) { toast(e.message, 'error'); }
     }
   });
 }
 window.editQuestion = editQuestion;
 window.deleteQuestion = deleteQuestion;
-window.handleQImageUpload = handleQImageUpload;
-window.removeQImage = removeQImage;
-window.handleOptionImageUpload = handleOptionImageUpload;
-window.removeOptionImage = removeOptionImage;
-window.handleExplImageUpload = handleExplImageUpload;
-window.removeExplImage = removeExplImage;
 
 async function openMasterDelete() {
   const total = DB.questions.length;
@@ -1571,7 +1605,7 @@ async function openMasterDelete() {
     onConfirm: async () => {
       try {
         const { db, ref, remove } = window.__fb;
-        await remove(ref(db, 'questions'));
+        await remove(ref(db, 'jamb_questions'));
         toast(`Deleted ${total} question${total === 1 ? '' : 's'}`, 'success');
       } catch (e) {
         console.error(e);
@@ -1610,7 +1644,7 @@ function openDeleteFiltered() {
     onConfirm: async () => {
       try {
         const { db, ref, remove } = window.__fb;
-        await Promise.all(filtered.map(q => remove(ref(db, 'questions/' + q.id))));
+        await Promise.all(filtered.map(q => remove(ref(db, 'jamb_questions/' + q.id))));
         toast(`Deleted ${filtered.length} question${filtered.length === 1 ? '' : 's'}`, 'success');
       } catch (e) {
         console.error(e);
@@ -1622,25 +1656,22 @@ function openDeleteFiltered() {
 window.openDeleteFiltered = openDeleteFiltered;
 
 /* =========================================================
-   CREATE QUIZ (with multi-subject support)
+   CREATE QUIZ (multi-subject)
    ========================================================= */
 function viewCreateMock() {
   const sb = state.mockBuilder;
   const selected = sb.selectedQuestions.map(id => DB.questions.find(q => q.id === id)).filter(Boolean);
   const editingMock = sb.editId ? DB.mocks.find(m => m.id === sb.editId) : null;
 
-  // Build available subjects list (from DB.subjects or fallback from questions)
   const availableSubjects = DB.subjects.length
     ? DB.subjects.filter(s => s.status !== 'inactive').map(s => s.name)
     : [...new Set(DB.questions.map(q => q.subject).filter(Boolean))].sort();
 
-  // Current selected subjects (from editing mock or builder state)
   let selectedSubjects = sb.selectedSubjects || [];
   if (editingMock && editingMock.subjects && Array.isArray(editingMock.subjects)) {
     selectedSubjects = editingMock.subjects;
     sb.selectedSubjects = selectedSubjects;
   } else if (editingMock && editingMock.subject) {
-    // Backward compat: single subject string
     selectedSubjects = [editingMock.subject];
     sb.selectedSubjects = selectedSubjects;
   }
@@ -1649,8 +1680,8 @@ function viewCreateMock() {
   const duration = editingMock?.duration || '45 min';
   const status = editingMock?.status || 'draft';
   const instructions = editingMock?.instructions || 'Answer all questions. Each question carries equal marks. You have 45 minutes to complete this test. Do not refresh the page during the exam.';
-  const startDate = editingMock?.start && editingMock.start !== 'ó' ? editingMock.start : '';
-  const endDate = editingMock?.end && editingMock.end !== 'ó' ? editingMock.end : '';
+  const startDate = editingMock?.start && editingMock.start !== '‚Äî' ? editingMock.start : '';
+  const endDate = editingMock?.end && editingMock.end !== '‚Äî' ? editingMock.end : '';
 
   const MAX_SUBJECTS = 4;
   const reachedMax = selectedSubjects.length >= MAX_SUBJECTS;
@@ -1660,7 +1691,7 @@ function viewCreateMock() {
       <div class="section-header">
         <h2>${editingMock ? 'Edit Quiz' : 'Create Quiz'}</h2>
         <div class="actions-bar">
-          <button class="btn btn-secondary" onclick="adminNav('published')">? Back to Quizzes</button>
+          <button class="btn btn-secondary" onclick="adminNav('published')">‚Üê Back to Quizzes</button>
           <button class="btn btn-primary" onclick="openImportIntoQuizModal()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             Import Questions into Quiz
@@ -1674,7 +1705,7 @@ function viewCreateMock() {
           <div class="grid grid-2">
             <div class="form-group">
               <label class="form-label">Quiz Title *</label>
-              <input class="form-input" id="quizTitle" value="${esc(title)}" placeholder="e.g. JAMB Mock 2025 ó Set B">
+              <input class="form-input" id="quizTitle" value="${esc(title)}" placeholder="e.g. JAMB Mock 2025 ‚Äî Set B">
             </div>
             <div class="form-group">
               <label class="form-label">Duration</label>
@@ -1691,7 +1722,6 @@ function viewCreateMock() {
         </div>
       </div>
 
-      <!-- MULTI-SUBJECT PICKER -->
       <div class="card mb-5">
         <div class="card-body">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
@@ -1702,19 +1732,17 @@ function viewCreateMock() {
             <span class="badge ${reachedMax ? 'badge-warning' : 'badge-primary'}">${selectedSubjects.length} / ${MAX_SUBJECTS}</span>
           </div>
 
-          <!-- Selected chips -->
           <div class="subject-chips ${selectedSubjects.length === 0 ? 'empty' : ''}" style="margin-bottom:14px;">
             ${selectedSubjects.length === 0
-              ? `<span class="empty-text">No subjects selected yet ó pick from the list below.</span>`
+              ? `<span class="empty-text">No subjects selected yet ‚Äî pick from the list below.</span>`
               : selectedSubjects.map(s => `
                   <span class="subject-chip">
                     ${esc(s)}
-                    <button class="chip-x" type="button" onclick="removeQuizSubject('${esc(s).replace(/'/g, "\\'")}')" title="Remove">?</button>
+                    <button class="chip-x" type="button" onclick="removeQuizSubject('${esc(s).replace(/'/g, "\\'")}')" title="Remove">‚úï</button>
                   </span>
                 `).join('')}
           </div>
 
-          <!-- Subject grid -->
           <div class="subject-grid">
             ${availableSubjects.length === 0
               ? `<div class="empty-note" style="grid-column:1/-1;">No subjects available. Add subjects first or add questions with subject names.</div>`
@@ -1726,7 +1754,7 @@ function viewCreateMock() {
                     <button type="button" class="subject-tile ${isSel ? 'selected' : ''} ${disabled ? 'disabled' : ''}" ${disabled ? 'disabled' : ''} onclick="${disabled ? '' : `toggleQuizSubject('${esc(s).replace(/'/g, "\\'")}')`}">
                       <div class="st-name">
                         <span>${esc(s)}</span>
-                        <span class="st-check">${isSel ? '?' : ''}</span>
+                        <span class="st-check">${isSel ? '‚úì' : ''}</span>
                       </div>
                       <span class="st-count">${qCount} question${qCount === 1 ? '' : 's'}</span>
                     </button>
@@ -1767,7 +1795,7 @@ function viewCreateMock() {
                   <div class="q-num">${i+1}</div>
                   <div class="q-info">
                     <div class="q-text">${esc(q.text)}</div>
-                    <div class="q-meta">${esc(q.subject || 'ó')} ï ${esc(q.topic || 'ó')} ï ${esc(q.difficulty || 'ó')}</div>
+                    <div class="q-meta">${esc(q.subject || '‚Äî')} ‚Ä¢ ${esc(q.topic || '‚Äî')} ‚Ä¢ ${esc(q.difficulty || '‚Äî')}</div>
                   </div>
                   <button class="btn-ghost-icon danger" title="Remove" onclick="removeQuestionFromMock('${q.id}')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1805,7 +1833,6 @@ function viewCreateMock() {
   `;
 }
 
-/* Multi-subject helpers */
 function toggleQuizSubject(name) {
   if (!state.mockBuilder.selectedSubjects) state.mockBuilder.selectedSubjects = [];
   const arr = state.mockBuilder.selectedSubjects;
@@ -1836,8 +1863,6 @@ function openQuestionPicker() {
   const subjects = [...new Set(DB.questions.map(q => q.subject).filter(Boolean))].sort();
   const topics = [...new Set(DB.questions.map(q => q.topic).filter(Boolean))].sort();
   const years = [...new Set(DB.questions.map(q => q.year).filter(Boolean))].sort();
-
-  // Pre-filter by selected subjects if any are selected
   const preselectedSubjects = sb.selectedSubjects || [];
 
   const rows = DB.questions.length === 0
@@ -1851,7 +1876,7 @@ function openQuestionPicker() {
           <input type="checkbox" class="picker-check" value="${q.id}" ${currentIds.has(q.id) ? 'checked' : ''}>
           <div class="info">
             <div class="q-text">${esc(q.text)}</div>
-            <div class="q-meta">${esc(q.subject || 'ó')} ï ${esc(q.topic || 'ó')} ï ${esc(q.difficulty || 'ó')} ${q.year ? 'ï ' + esc(q.year) : ''}</div>
+            <div class="q-meta">${esc(q.subject || '‚Äî')} ‚Ä¢ ${esc(q.topic || '‚Äî')} ‚Ä¢ ${esc(q.difficulty || '‚Äî')} ${q.year ? '‚Ä¢ ' + esc(q.year) : ''}</div>
           </div>
         </div>`).join('');
 
@@ -1889,7 +1914,7 @@ function openQuestionPicker() {
       </div>
       <div class="form-group" style="margin-bottom:0">
         <label class="form-label">Search Question Text</label>
-        <input class="form-input" id="pickerSearch" placeholder="SearchÖ" oninput="filterPicker()">
+        <input class="form-input" id="pickerSearch" placeholder="Search‚Ä¶" oninput="filterPicker()">
       </div>
     </div>
 
@@ -2007,7 +2032,7 @@ function openImportIntoQuizModal() {
       <input type="file" id="quizImportFile" accept=".csv,.xlsx,.xls,.docx" style="display:none">
     </div>
     <div id="quizImportProgress" class="hidden" style="margin-top:16px">
-      <p id="quizImportLabel" class="text-sm text-muted">ImportingÖ</p>
+      <p id="quizImportLabel" class="text-sm text-muted">Importing‚Ä¶</p>
       <div class="progress"><div class="progress-bar" id="quizImportFill" style="width:0%"></div></div>
       <p id="quizImportPct" class="text-xs text-muted" style="margin-top:4px">0%</p>
     </div>
@@ -2050,11 +2075,16 @@ function showQuizImportPreview(rows) {
   const questions = rows.map(r => {
     const get = k => (r[k] || '').toString();
     const correctRaw = get('Correct Answer') || get('correct') || '';
+    const options = [];
+    ['A','B','C','D','E'].forEach(l => {
+      const v = get('Option ' + l);
+      if (v && v.trim()) options.push(`${l}) ${v.trim()}`);
+    });
     return {
       subject: get('Subject') || 'General',
       topic: get('Topic') || 'General',
       text: get('Question Text') || '',
-      options: ['A','B','C','D'].map(l => `${l}) ${get('Option ' + l) || 'ó'}`),
+      options,
       correct: normalizeCorrect(correctRaw),
       explanation: get('Explanation') || '',
       year: get('Year') || '',
@@ -2065,6 +2095,7 @@ function showQuizImportPreview(rows) {
       __imgOptionB: r.__imgOptionB || null,
       __imgOptionC: r.__imgOptionC || null,
       __imgOptionD: r.__imgOptionD || null,
+      __imgOptionE: r.__imgOptionE || null,
       __imgExplanation: r.__imgExplanation || null,
       __media: r.__media || null
     };
@@ -2078,12 +2109,12 @@ function showQuizImportPreview(rows) {
         <tbody>
           ${questions.map((q,i) => {
             const hasQ = q.__imgQuestion && q.__media && q.__media[q.__imgQuestion];
-            const optCount = [q.__imgOptionA,q.__imgOptionB,q.__imgOptionC,q.__imgOptionD].filter(Boolean).length;
+            const optCount = [q.__imgOptionA,q.__imgOptionB,q.__imgOptionC,q.__imgOptionD,q.__imgOptionE].filter(Boolean).length;
             return `
               <tr>
                 <td>${i+1}</td>
-                <td>${hasQ ? `<img data-idx="${i}" class="qprev-img">` : 'ó'}</td>
-                <td>${optCount > 0 ? `${optCount} img` : 'ó'}</td>
+                <td>${hasQ ? `<img data-idx="${i}" class="qprev-img">` : '‚Äî'}</td>
+                <td>${optCount > 0 ? `${optCount} img` : '‚Äî'}</td>
                 <td>${esc(q.subject)}</td>
                 <td style="max-width:220px">${esc(q.text)}</td>
                 <td><strong>${esc(q.correct)}</strong></td>
@@ -2124,15 +2155,15 @@ async function runQuizImport(questions) {
 
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];
-    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}Ö`;
+    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}‚Ä¶`;
 
     let mainImage = null;
     if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion]) {
       try { mainImage = await uploadToCloudinary(q.__media[q.__imgQuestion]); imgOk++; } catch (e) { imgFail++; }
     }
-    const optionImages = [null, null, null, null];
-    const optSlots = [q.__imgOptionA, q.__imgOptionB, q.__imgOptionC, q.__imgOptionD];
-    for (let o = 0; o < 4; o++) {
+    const optionImages = [null, null, null, null, null];
+    const optSlots = [q.__imgOptionA, q.__imgOptionB, q.__imgOptionC, q.__imgOptionD, q.__imgOptionE];
+    for (let o = 0; o < optSlots.length; o++) {
       const path = optSlots[o];
       if (path && q.__media && q.__media[path]) {
         try { optionImages[o] = await uploadToCloudinary(q.__media[path]); imgOk++; } catch (e) { imgFail++; }
@@ -2143,15 +2174,32 @@ async function runQuizImport(questions) {
       try { explanationImage = await uploadToCloudinary(q.__media[q.__imgExplanation]); imgOk++; } catch (e) { imgFail++; }
     }
 
+    // Convert ["A) foo","B) bar"] ‚Üí {option_a:'foo', option_b:'bar', ...}
+    const optFields = { option_a:'', option_b:'', option_c:'', option_d:'', option_e:'' };
+    (q.options || []).forEach(opt => {
+      const m = String(opt).match(/^([A-E])\)\s*(.*)$/);
+      if (m) optFields['option_' + m[1].toLowerCase()] = m[2];
+    });
+
     const data = {
-      text: q.text, subject: q.subject, topic: q.topic,
-      difficulty: q.difficulty, correct: q.correct, year: q.year,
-      options: q.options, optionImages, explanation: q.explanation,
-      explanationImage, image: mainImage
+      question: q.text,
+      subject: q.subject,
+      topic: q.topic,
+      difficulty: q.difficulty,
+      answer: q.correct,
+      year: q.year,
+      explanation: q.explanation,
+      image_url: mainImage || null,
+      option_images: optionImages,
+      explanation_image_url: explanationImage || null,
+      exam_type: 'JAMB',
+      ...optFields
     };
     try {
-      const newId = await dbPush('questions', data);
-      newIds.push(newId);
+      const { db, ref, push, set } = window.__fb;
+      const r = push(ref(db, 'jamb_questions'));
+      await set(r, { ...data, createdAt: Date.now() });
+      newIds.push(r.key);
       imported++;
     } catch (e) { console.error('DB fail', e); }
 
@@ -2164,7 +2212,6 @@ async function runQuizImport(questions) {
     ...new Set([...state.mockBuilder.selectedQuestions, ...newIds])
   ];
 
-  // Auto-add subjects from imported questions
   const importedSubjects = [...new Set(questions.map(q => q.subject).filter(Boolean))];
   if (!state.mockBuilder.selectedSubjects) state.mockBuilder.selectedSubjects = [];
   const MAX = 4;
@@ -2182,7 +2229,7 @@ async function runQuizImport(questions) {
   }, 700);
 }
 
-/* SAVE QUIZ ó Multi-subject support */
+/* SAVE QUIZ ‚Äî Multi-subject support */
 async function saveQuiz(status) {
   const title = document.getElementById('quizTitle').value.trim();
   if (!title) return toast('Quiz title required', 'error');
@@ -2203,13 +2250,13 @@ async function saveQuiz(status) {
   const sb = state.mockBuilder;
   const data = {
     title,
-    subjects: subjects,                      // NEW: array of subjects
-    subject: subjects.join(', '),            // BACKWARD COMPAT: string (for legacy readers)
+    subjects: subjects,
+    subject: subjects.join(', '),
     duration: document.getElementById('quizDuration').value.trim() || '45 min',
     status,
     instructions: document.getElementById('quizInstructions').value.trim(),
-    start: startDate || 'ó',
-    end: endDate || 'ó',
+    start: startDate || '‚Äî',
+    end: endDate || '‚Äî',
     questions: sb.selectedQuestions.length,
     questionIds: sb.selectedQuestions,
     updatedAt: Date.now()
@@ -2223,7 +2270,6 @@ async function saveQuiz(status) {
       await dbPush('mocks', data);
       toast('Quiz created', 'success');
     }
-    // Reset builder and navigate back to Published Quizzes list
     state.mockBuilder = { selectedQuestions: [], editId: null, selectedSubjects: [] };
     adminNav('published');
   } catch (e) { toast(e.message, 'error'); }
@@ -2251,17 +2297,17 @@ function viewMocks() {
                 ? m.subjects
                 : (m.subject ? [m.subject] : []);
               const subjectDisplay = subjectList.length === 0
-                ? 'ó'
+                ? '‚Äî'
                 : subjectList.map(s => `<span class="badge badge-primary" style="margin-right:4px;">${esc(s)}</span>`).join('');
               return `
                 <tr>
                   <td><strong>${esc(m.title)}</strong></td>
                   <td style="max-width:260px">${subjectDisplay}</td>
                   <td>${m.questions || 0}</td>
-                  <td>${esc(m.duration || 'ó')}</td>
+                  <td>${esc(m.duration || '‚Äî')}</td>
                   <td><span class="badge ${m.status==='published'?'badge-success':'badge-warning'}">${m.status || 'draft'}</span></td>
-                  <td>${esc(m.start && m.start !== 'ó' ? m.start : 'Anytime')}</td>
-                  <td>${esc(m.end && m.end !== 'ó' ? m.end : 'Anytime')}</td>
+                  <td>${esc(m.start && m.start !== '‚Äî' ? m.start : 'Anytime')}</td>
+                  <td>${esc(m.end && m.end !== '‚Äî' ? m.end : 'Anytime')}</td>
                   <td>
                     <div class="action-buttons">
                       <button class="btn-ghost-icon" title="Edit" onclick="startEditQuiz('${m.id}')">
@@ -2286,7 +2332,6 @@ function startNewQuiz() {
 function startEditQuiz(id) {
   const m = DB.mocks.find(x => x.id === id);
   if (!m) return;
-  // Handle backward compat: if old mock has `subject` string but not `subjects` array
   let subjects = [];
   if (Array.isArray(m.subjects)) subjects = m.subjects.slice(0, 4);
   else if (m.subject) subjects = [m.subject];
@@ -2372,7 +2417,7 @@ function viewResults() {
         <div class="stat-card">
           <div class="stat-icon secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
           <div class="stat-value">${passed}/${total}</div>
-          <div class="stat-label">Passed (=50%)</div>
+          <div class="stat-label">Passed (‚â•50%)</div>
         </div>
       </div>
 
@@ -2390,7 +2435,7 @@ function viewResults() {
             <option value="">All Classes</option>
             ${classes.map(c => `<option value="${esc(c)}" ${f.class === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}
           </select>
-          <input class="form-input" placeholder="Search student or subjectÖ" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.resultFilter.search=this.value; render();">
+          <input class="form-input" placeholder="Search student or subject‚Ä¶" value="${esc(f.search)}" style="flex:1;min-width:180px" oninput="state.resultFilter.search=this.value; render();">
           ${filterActive ? `<button class="btn btn-secondary" onclick="state.resultFilter={student:'',subject:'',class:'',search:''}; render();">Reset</button>` : ''}
         </div>
       </div>
@@ -2408,12 +2453,12 @@ function viewResults() {
           </td></tr>` :
             filtered.map(r => `
               <tr>
-                <td>${esc(r.date || 'ó')}</td>
+                <td>${esc(r.date || '‚Äî')}</td>
                 <td><strong>${esc(r.studentName || 'Unknown')}</strong></td>
-                <td>${esc(r.studentClass || 'ó')}</td>
+                <td>${esc(r.studentClass || '‚Äî')}</td>
                 <td><span class="badge badge-primary">${esc(r.type || 'practice')}</span></td>
-                <td>${esc(r.subject || 'ó')}</td>
-                <td>${esc(r.score || 'ó')}</td>
+                <td>${esc(r.subject || '‚Äî')}</td>
+                <td>${esc(r.score || '‚Äî')}</td>
                 <td><strong>${r.pct || 0}%</strong></td>
                 <td>
                   <span class="badge ${r.pct >= 75 ? 'badge-success' : r.pct >= 50 ? 'badge-warning' : 'badge-danger'}">
@@ -2759,7 +2804,7 @@ function showPreview(rows) {
             return `
               <tr>
                 <td>${i+1}</td>
-                <td>${hasQ ? `<img data-idx="${i}" class="prev-img">` : 'ó'}</td>
+                <td>${hasQ ? `<img data-idx="${i}" class="prev-img">` : '‚Äî'}</td>
                 <td>${q.options.length}</td>
                 <td>${esc(q.subject)}</td>
                 <td style="max-width:220px">${esc(q.text)}</td>
@@ -2770,7 +2815,7 @@ function showPreview(rows) {
       </table>
     </div>
     <div id="importProgress" class="hidden" style="margin-top:16px">
-      <p id="importLabel" class="text-sm text-muted">ImportingÖ</p>
+      <p id="importLabel" class="text-sm text-muted">Importing‚Ä¶</p>
       <div class="progress"><div class="progress-bar" id="importFill" style="width:0%"></div></div>
       <p id="importPct" class="text-xs text-muted" style="margin-top:4px">0%</p>
     </div>
@@ -2801,7 +2846,7 @@ async function confirmImport(questions) {
   let imported = 0, imgOk = 0, imgFail = 0;
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];
-    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}Ö`;
+    if (label) label.textContent = `Processing Q${i+1} of ${questions.length}‚Ä¶`;
 
     let mainImage = null;
     if (q.__imgQuestion && q.__media && q.__media[q.__imgQuestion]) {
@@ -2820,13 +2865,32 @@ async function confirmImport(questions) {
     if (q.__imgExplanation && q.__media && q.__media[q.__imgExplanation]) {
       try { explanationImage = await uploadToCloudinary(q.__media[q.__imgExplanation]); imgOk++; } catch (e) { imgFail++; }
     }
+    const optFields = { option_a:'', option_b:'', option_c:'', option_d:'', option_e:'' };
+    (q.options || []).forEach(opt => {
+      const m = String(opt).match(/^([A-E])\)\s*(.*)$/);
+      if (m) optFields['option_' + m[1].toLowerCase()] = m[2];
+    });
+
     const data = {
-      text: q.text, subject: q.subject, topic: q.topic,
-      difficulty: q.difficulty, correct: q.correct, year: q.year,
-      options: q.options, optionImages, explanation: q.explanation,
-      explanationImage, image: mainImage
+      question: q.text,
+      subject: q.subject,
+      topic: q.topic,
+      difficulty: q.difficulty,
+      answer: q.correct,
+      year: q.year,
+      explanation: q.explanation,
+      image_url: mainImage || null,
+      option_images: optionImages,
+      explanation_image_url: explanationImage || null,
+      exam_type: 'JAMB',
+      ...optFields
     };
-    try { await dbPush('questions', data); imported++; } catch (e) {}
+    try {
+      const { db, ref, push, set } = window.__fb;
+      const r = push(ref(db, 'jamb_questions'));
+      await set(r, { ...data, createdAt: Date.now() });
+      imported++;
+    } catch (e) { console.error('DB fail', e); }
 
     const p = Math.round(((i+1)/questions.length)*100);
     if (fill) fill.style.width = p + '%';
@@ -2862,7 +2926,7 @@ function computeNotifications() {
     notifs.push({
       id: 'res_' + (r.id || r.createdAt),
       title: `${r.studentName || 'Student'} scored ${pct}%`,
-      text: `${r.subject || 'Quiz'} ï ${r.score || ''}`,
+      text: `${r.subject || 'Quiz'} ‚Ä¢ ${r.score || ''}`,
       time: r.createdAt,
       iconClass,
       icon: pct >= 50
@@ -2880,7 +2944,7 @@ function computeNotifications() {
     notifs.push({
       id: 'q_' + q.id,
       title: 'New question added',
-      text: `${q.subject || 'General'} ï ${(q.text || '').slice(0, 50)}Ö`,
+      text: `${q.subject || 'General'} ‚Ä¢ ${(q.text || '').slice(0, 50)}‚Ä¶`,
       time: q.createdAt,
       iconClass: '',
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
@@ -2896,7 +2960,7 @@ function computeNotifications() {
     notifs.push({
       id: 'mock_' + m.id,
       title: `Quiz ${m.status === 'published' ? 'published' : 'updated'}`,
-      text: `${m.title} ï ${m.questions || 0} questions`,
+      text: `${m.title} ‚Ä¢ ${m.questions || 0} questions`,
       time: m.updatedAt || m.createdAt,
       iconClass: 'warning',
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>`
@@ -2923,7 +2987,8 @@ function renderNotifications() {
   const dot = document.getElementById('notifDot');
   if (!container) return;
 
-  const unread = list.length > 0 && !state.notificationsRead;
+  const newestTime = list.length ? Math.max(...list.map(n => n.time || 0)) : 0;
+  const unread = list.length > 0 && (!state.notificationsRead || newestTime > state.notificationsReadAt);
   if (dot) dot.style.display = unread ? 'block' : 'none';
 
   if (list.length === 0) {
@@ -2958,6 +3023,7 @@ function setupNotifications() {
   markRead.addEventListener('click', (e) => {
     e.stopPropagation();
     state.notificationsRead = true;
+    state.notificationsReadAt = Date.now();
     document.getElementById('notifDot').style.display = 'none';
     document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread'));
   });
@@ -2982,17 +3048,16 @@ function listenJambQuestions() {
   onValue(ref(db, 'jamb_questions'), snap => {
     const val = snap.val() || {};
     DB.questions = Object.entries(val).map(([id, raw]) => {
-      // Build options array
       const opts = [];
-      const optImgs = [];
-      ['a','b','c','d','e'].forEach(l => {
+      const optImgsByLetter = { A:null, B:null, C:null, D:null, E:null };
+      ['a','b','c','d','e'].forEach((l, i) => {
+        const letter = l.toUpperCase();
         const v = raw['option_' + l];
         if (v && String(v).trim()) {
-          opts.push(l.toUpperCase() + ') ' + String(v).trim());
-          optImgs.push(null);
+          opts.push(letter + ') ' + String(v).trim());
         }
+        optImgsByLetter[letter] = (raw.option_images && raw.option_images[i]) || null;
       });
-      // Subject title-case
       const subjRaw = String(raw.subject || 'General').trim();
       const subj = subjRaw.length <= 3 ? subjRaw.toUpperCase() : subjRaw.replace(/\b\w/g, c => c.toUpperCase());
       return {
@@ -3004,11 +3069,12 @@ function listenJambQuestions() {
         difficulty: raw.difficulty || 'Medium',
         correct: String(raw.answer || raw.correct || 'A').trim().toUpperCase(),
         options: opts,
-        optionImages: optImgs,
+        optionImages: optImgsByLetter,      // now keyed by letter A..E
         explanation: raw.explanation || raw.solution || '',
         image: raw.image_url || raw.image || null,
         explanationImage: raw.explanation_image_url || null,
-        exam_type: raw.exam_type || 'JAMB'
+        exam_type: raw.exam_type || 'JAMB',
+        createdAt: raw.createdAt || 0
       };
     });
     console.log('[Admin] Loaded ' + DB.questions.length + ' JAMB questions');
@@ -3017,33 +3083,32 @@ function listenJambQuestions() {
 }
 
 /* =========================================================
-   AI TOPIC DETECTION (runs in browser ó fast & reliable)
+   AI TOPIC DETECTION
    ========================================================= */
-const GEMINI_API_KEY = "AQ.Ab8RN6IsstXQdxQLpIsGvL9EBbBdYAJN1GulgG2CMFEoyhZGvQ"; // <-- CHANGE THIS
-
 async function askGeminiForTopic(questionText, subject, optionsText) {
   const prompt = "You are a JAMB syllabus expert. Classify this " + subject.toUpperCase() + " question into the correct JAMB syllabus topic. Reply with ONLY the topic name (2 to 5 words). Do NOT write any explanation. Do NOT write any sentence. Do NOT include the word 'Topic:'. Base the topic on the official JAMB syllabus.\n\nQuestion: " + questionText + "\nOptions: " + optionsText + "\n\nTopic:";
 
-  try {
-    // Using Puter.js - completely free, no API key needed
-    const response = await puter.ai.chat(prompt, {
-      model: 'gpt-4o-mini' // Fast and reliable
-    });
+  const url = "https://text.pollinations.ai/" + encodeURIComponent(prompt);
 
-    let topic = response.trim();
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.warn('Pollinations HTTP ' + response.status);
+      return null;
+    }
+
+    let topic = await response.text();
     topic = topic.replace(/Topic:/gi, '').trim();
     topic = topic.split('\n')[0].trim();
     topic = topic.replace(/^["']|["']$/g, '').trim();
     if (topic.length > 60) topic = topic.substring(0, 60).trim();
     return topic || null;
   } catch (e) {
-    console.warn('Puter AI error: ' + e.message);
+    console.warn('Pollinations error: ' + e.message);
     return null;
   }
 }
 async function autoDetectAllTopicsWithAI() {
-   
-
   const missing = DB.questions.filter(q => !q.topic || q.topic.trim() === '' || q.topic === 'General');
   if (missing.length === 0) {
     toast('All questions already have topics', '');
@@ -3052,7 +3117,7 @@ async function autoDetectAllTopicsWithAI() {
 
   confirmDialog({
     title: 'Auto-detect topics for ' + missing.length + ' questions?',
-    message: 'The AI will classify each question into a JAMB syllabus topic. This runs in your browser and will take about ' + Math.ceil(missing.length / 5) + ' minutes.<br><br>You can leave this tab open ó do not close it.',
+    message: 'The AI will classify each question into a JAMB syllabus topic. This runs in your browser and will take about ' + Math.ceil(missing.length / 5) + ' minutes.<br><br>You can leave this tab open ‚Äî do not close it.',
     confirmLabel: 'Start (' + missing.length + ')',
     variant: 'warning',
     onConfirm: async () => {
@@ -3062,16 +3127,14 @@ async function autoDetectAllTopicsWithAI() {
       let updated = 0;
       let failed = 0;
       const total = missing.length;
-
-      // Process 5 at a time (parallel) to be fast
       const BATCH_SIZE = 1;
 
       for (let i = 0; i < total; i += BATCH_SIZE) {
         const batch = missing.slice(i, i + BATCH_SIZE);
 
         await Promise.all(batch.map(async (q) => {
-          const opts = ['a','b','c','d','e'].map(l => q['option_' + l] || q['option_' + l.toUpperCase()] || '').filter(Boolean).join(' | ').substring(0, 300);
-          const topic = await askGeminiForTopic(q.text || q.question || '', q.subject || 'general', opts);
+          const opts = (q.options || []).join(' | ').substring(0, 300);
+          const topic = await askGeminiForTopic(q.text || '', q.subject || 'general', opts);
 
           if (topic) {
             try {
@@ -3090,7 +3153,6 @@ async function autoDetectAllTopicsWithAI() {
 
         toast('Progress: ' + Math.min(i + BATCH_SIZE, total) + ' / ' + total + '  (' + updated + ' done, ' + failed + ' failed)');
 
-        // Small pause between batches to be polite to the API
         await new Promise(r => setTimeout(r, 4500));
       }
 
